@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RxVision AI OCR Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">RxVision AI</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="mvp.html">OCR Demo</a>
+    </nav>
+  </header>
+
+  <main class="app-layout">
+    <section class="upload-panel">
+      <h1>Prescription OCR Demo</h1>
+      <p>This MVP screen simulates the pharmacist review workflow. Real OCR/API integration comes next.</p>
+
+      <label class="upload-box" for="rxUpload">
+        <span>Upload prescription image or PDF</span>
+        <small>JPG, PNG, or PDF</small>
+        <input id="rxUpload" type="file" accept="image/*,.pdf" />
+      </label>
+
+      <div id="preview" class="preview empty">Prescription preview will appear here.</div>
+
+      <button class="btn primary full" id="runExtraction">Run AI Extraction</button>
+    </section>
+
+    <section class="review-panel">
+      <div class="review-header">
+        <div>
+          <p class="eyebrow">Pharmacist verification required</p>
+          <h2>Extracted Fields</h2>
+        </div>
+        <span class="status">Draft</span>
+      </div>
+
+      <form id="rxForm" class="field-grid">
+        <label>Patient Name<input name="patientName" value="John Sample" /></label>
+        <label>Date of Birth<input name="dob" value="1984-06-15" /></label>
+        <label>Drug Name<input name="drugName" value="Amoxicillin" /></label>
+        <label>Strength<input name="strength" value="500 mg" /></label>
+        <label>Quantity<input name="quantity" value="21" /></label>
+        <label>Refills<input name="refills" value="0" /></label>
+        <label class="wide">Directions<textarea name="directions">Take one capsule by mouth three times daily for 7 days.</textarea></label>
+        <label>Prescriber<input name="prescriber" value="Dr. Jane Smith" /></label>
+        <label>Prescription Date<input name="rxDate" value="2026-06-09" /></label>
+      </form>
+
+      <div class="flags">
+        <h3>Review Flags</h3>
+        <p>⚠ Confirm prescriber identity before processing.</p>
+        <p>⚠ Verify quantity and duration against original prescription.</p>
+        <p>⚠ Do not use extracted data without pharmacist review.</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="approveBtn">Mark Reviewed</button>
+        <button class="btn secondary" id="copyBtn">Copy JSON</button>
+      </div>
+
+      <pre id="jsonOutput" class="json-output"></pre>
+    </section>
+  </main>
+
+  <footer>RxVision AI MVP demo. Not for clinical use.</footer>
+  <script src="script.js"></script>
+</body>
+</html>

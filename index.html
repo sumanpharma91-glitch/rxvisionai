@@ -3,371 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RxVision AI | AI-Assisted Prescription OCR Intake</title>
-  <meta name="description" content="RxVision AI helps pharmacies capture prescription details from images and faxes using OCR and AI-assisted structured extraction, with pharmacist verification at the center." />
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #102033;
-      background: #f6f9fc;
-      line-height: 1.6;
-    }
-    header {
-      background: linear-gradient(135deg, #0b4f6c, #01a7c2);
-      color: white;
-      padding: 28px 7%;
-    }
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .logo {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      margin-left: 18px;
-      font-weight: 600;
-      font-size: 15px;
-    }
-    .hero {
-      padding: 72px 0 46px;
-      max-width: 1080px;
-    }
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 64px);
-      line-height: 1.05;
-      margin: 0 0 22px;
-      max-width: 850px;
-    }
-    .hero p {
-      font-size: 20px;
-      max-width: 760px;
-      margin-bottom: 30px;
-    }
-    .buttons a {
-      display: inline-block;
-      background: white;
-      color: #0b4f6c;
-      padding: 14px 22px;
-      margin: 8px 10px 8px 0;
-      border-radius: 9px;
-      text-decoration: none;
-      font-weight: 800;
-    }
-    .buttons a.secondary {
-      background: transparent;
-      color: white;
-      border: 2px solid white;
-    }
-    section {
-      padding: 62px 7%;
-    }
-    .container {
-      max-width: 1120px;
-      margin: auto;
-    }
-    h2 {
-      font-size: 34px;
-      margin: 0 0 16px;
-      color: #0b4f6c;
-    }
-    .lead {
-      font-size: 18px;
-      max-width: 820px;
-      color: #425466;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-      margin-top: 30px;
-    }
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 26px;
-      box-shadow: 0 10px 30px rgba(16,32,51,0.08);
-      border: 1px solid #e9eef5;
-    }
-    .card h3 {
-      margin-top: 0;
-      color: #123;
-      font-size: 21px;
-    }
-    .workflow {
-      counter-reset: step;
-    }
-    .step {
-      position: relative;
-      padding-left: 62px;
-      margin: 24px 0;
-    }
-    .step:before {
-      counter-increment: step;
-      content: counter(step);
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #01a7c2;
-      color: white;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-    }
-    .split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .tag {
-      display: inline-block;
-      background: #e6f8fb;
-      color: #0b4f6c;
-      padding: 7px 11px;
-      border-radius: 999px;
-      font-weight: 700;
-      margin: 5px 5px 5px 0;
-      font-size: 14px;
-    }
-    .warning {
-      background: #fff8e6;
-      border-left: 6px solid #f0b429;
-      padding: 22px;
-      border-radius: 12px;
-      margin-top: 24px;
-    }
-    .pricing {
-      background: #102033;
-      color: white;
-    }
-    .pricing h2 { color: white; }
-    .pricing .card { color: #102033; }
-    form {
-      background: white;
-      padding: 28px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(16,32,51,0.08);
-    }
-    input, textarea {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #cfd8e3;
-      border-radius: 9px;
-      margin-bottom: 14px;
-      font-size: 16px;
-    }
-    button {
-      background: #0b4f6c;
-      color: white;
-      padding: 14px 22px;
-      border: none;
-      border-radius: 9px;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    footer {
-      padding: 30px 7%;
-      background: #071520;
-      color: #d8e4ef;
-      text-align: center;
-      font-size: 14px;
-    }
-    @media (max-width: 850px) {
-      .grid, .split { grid-template-columns: 1fr; }
-      .nav-links a { display: inline-block; margin: 8px 10px 0 0; }
-      section { padding: 46px 6%; }
-    }
-  </style>
+  <title>RxVision AI MVP | Prescription OCR Demo</title>
+  <meta name="description" content="RxVision AI MVP demo for AI-assisted prescription OCR intake with pharmacist verification." />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
+  <header class="topbar">
+    <div class="brand">RxVision AI</div>
     <nav>
-      <div class="logo">RxVision AI</div>
-      <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#workflow">Workflow</a>
-        <a href="#safety">Safety</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#contact">Contact</a>
-      </div>
+      <a href="index.html">Home</a>
+      <a href="mvp.html">OCR Demo</a>
     </nav>
-
-    <div class="hero">
-      <h1>AI-assisted prescription OCR intake for modern pharmacies.</h1>
-      <p>Capture prescription details from images, scans, and faxes into structured fields — while keeping pharmacist verification at the center of every workflow.</p>
-      <div class="buttons">
-        <a href="#contact">Request Demo</a>
-        <a href="#workflow" class="secondary">See Workflow</a>
-      </div>
-    </div>
   </header>
 
-  <section>
-    <div class="container split">
-      <div>
-        <h2>Reduce manual typing. Improve intake consistency.</h2>
-        <p class="lead">RxVision AI is designed to support pharmacy teams by reading prescription images and preparing a structured review screen. It does not replace pharmacist judgment or prescription authenticity checks.</p>
+  <main class="hero">
+    <section class="hero-content">
+      <p class="eyebrow">AI-assisted pharmacy intake</p>
+      <h1>Prescription OCR workflow for pharmacy teams.</h1>
+      <p class="subtitle">Upload a prescription image, review extracted fields, flag uncertain items, and keep pharmacist verification at the center.</p>
+      <div class="actions">
+        <a class="btn primary" href="mvp.html">Open OCR Demo</a>
+        <a class="btn secondary" href="mailto:info@rxvisionai.ca">Request Demo</a>
       </div>
-      <div class="card">
-        <h3>Extracted prescription fields</h3>
-        <span class="tag">Patient Name</span>
-        <span class="tag">DOB</span>
-        <span class="tag">Drug</span>
-        <span class="tag">Strength</span>
-        <span class="tag">Directions</span>
-        <span class="tag">Quantity</span>
-        <span class="tag">Refills</span>
-        <span class="tag">Prescriber</span>
-        <span class="tag">Date</span>
-      </div>
+    </section>
+
+    <section class="panel">
+      <h2>MVP focus</h2>
+      <ul>
+        <li>Prescription image upload</li>
+        <li>AI-assisted field extraction</li>
+        <li>Confidence and risk flags</li>
+        <li>Pharmacist review before use</li>
+        <li>Export to structured JSON</li>
+      </ul>
+    </section>
+  </main>
+
+  <section class="section">
+    <h2>How the first prototype works</h2>
+    <div class="cards">
+      <article class="card"><h3>1. Upload</h3><p>Add a prescription image or PDF for intake review.</p></article>
+      <article class="card"><h3>2. Extract</h3><p>The demo prepares likely patient, medication, prescriber, and direction fields.</p></article>
+      <article class="card"><h3>3. Verify</h3><p>Pharmacist reviews every field against the original before copying or exporting.</p></article>
     </div>
   </section>
 
-  <section id="features">
-    <div class="container">
-      <h2>Core features</h2>
-      <p class="lead">Built for a practical MVP that can be tested safely inside a pharmacy workflow.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Prescription OCR</h3>
-          <p>Upload a prescription image, fax, or scan and convert visible text into editable structured prescription fields.</p>
-        </div>
-        <div class="card">
-          <h3>AI field extraction</h3>
-          <p>Identify likely drug name, strength, sig, quantity, refills, prescriber, and patient details in a clean review layout.</p>
-        </div>
-        <div class="card">
-          <h3>Confidence scoring</h3>
-          <p>Show low-confidence sections so pharmacy staff can quickly focus on handwriting, missing details, or unclear directions.</p>
-        </div>
-        <div class="card">
-          <h3>Pharmacist verification</h3>
-          <p>Require human review before anything is saved, exported, copied, or entered into a pharmacy management system.</p>
-        </div>
-        <div class="card">
-          <h3>Risk flags</h3>
-          <p>Flag missing prescriber information, ambiguous strengths, controlled-drug review needs, and look-alike/sound-alike concerns.</p>
-        </div>
-        <div class="card">
-          <h3>Audit trail</h3>
-          <p>Track who uploaded, reviewed, edited, approved, exported, or deleted prescription intake records.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="workflow">
-    <div class="container">
-      <h2>How it works</h2>
-      <div class="workflow">
-        <div class="step">
-          <h3>Upload prescription</h3>
-          <p>Staff upload a scanned prescription, fax image, phone image, or PDF.</p>
-        </div>
-        <div class="step">
-          <h3>OCR reads the document</h3>
-          <p>The system extracts visible text and separates it into possible prescription fields.</p>
-        </div>
-        <div class="step">
-          <h3>AI structures the data</h3>
-          <p>The extracted text is converted into a pharmacist-friendly review screen.</p>
-        </div>
-        <div class="step">
-          <h3>Unclear items are flagged</h3>
-          <p>Low-confidence handwriting, missing details, and unusual combinations are highlighted.</p>
-        </div>
-        <div class="step">
-          <h3>Pharmacist verifies</h3>
-          <p>The pharmacist or authorized pharmacy team member reviews against the original image before use.</p>
-        </div>
-        <div class="step">
-          <h3>Export or copy forward</h3>
-          <p>Verified data can be copied or exported to support prescription entry workflows.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="safety">
-    <div class="container split">
-      <div>
-        <h2>Designed with pharmacy safety in mind</h2>
-        <p class="lead">RxVision AI should be positioned as an intake support tool, not an autonomous prescribing, dispensing, or clinical decision-making tool.</p>
-        <div class="warning">
-          <strong>Important:</strong> This website is a concept/MVP template. Real deployment must follow applicable privacy, pharmacy, software, and healthcare regulations.
-        </div>
-      </div>
-      <div class="card">
-        <h3>Safety guardrails</h3>
-        <p>✓ Human verification required</p>
-        <p>✓ Original prescription always visible</p>
-        <p>✓ No automatic dispensing approval</p>
-        <p>✓ Encrypted storage and transmission</p>
-        <p>✓ Role-based access</p>
-        <p>✓ Audit logs for every action</p>
-        <p>✓ Data retention and deletion policy</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="pricing" class="pricing">
-    <div class="container">
-      <h2>Example pricing model</h2>
-      <p class="lead">You can adjust this after testing with real pharmacies.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Starter</h3>
-          <p><strong>$99/month</strong></p>
-          <p>For small independent pharmacies testing AI-assisted prescription intake.</p>
-        </div>
-        <div class="card">
-          <h3>Professional</h3>
-          <p><strong>$249/month</strong></p>
-          <p>For higher-volume pharmacies needing team access, audit logs, and export workflows.</p>
-        </div>
-        <div class="card">
-          <h3>Enterprise</h3>
-          <p><strong>Custom</strong></p>
-          <p>For groups needing integrations, custom privacy review, onboarding, and support.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="container split">
-      <div>
-        <h2>Request a demo</h2>
-        <p class="lead">Use this section to collect early pharmacy interest before building the full app.</p>
-        <p><strong>Suggested domain names:</strong></p>
-        <p>rxvisionai.ca, rxvisionai.com, rxintakeai.ca, pharmocr.ca, scriptvisionai.com</p>
-      </div>
-      <form>
-        <input type="text" placeholder="Your name" />
-        <input type="email" placeholder="Email address" />
-        <input type="text" placeholder="Pharmacy / organization" />
-        <textarea rows="5" placeholder="Tell us about your prescription intake workflow"></textarea>
-        <button type="button">Submit Request</button>
-      </form>
-    </div>
-  </section>
-
-  <footer>
-    © 2026 RxVision AI. AI-assisted prescription intake concept. Pharmacist verification required.
-  </footer>
+  <footer>© 2026 RxVision AI. Prototype only. Pharmacist verification required.</footer>
 </body>
 </html>
