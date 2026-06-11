@@ -18,17 +18,17 @@
   <main class="app-layout">
     <section class="upload-panel">
       <h1>Prescription OCR Demo</h1>
-      <p>This MVP screen simulates the pharmacist review workflow. Real OCR/API integration comes next.</p>
+      <p>This MVP runs real OCR in your browser using Tesseract.js. Upload a clear prescription image, run OCR, then verify every extracted field against the original.</p>
 
       <label class="upload-box" for="rxUpload">
-        <span>Upload prescription image or PDF</span>
-        <small>JPG, PNG, or PDF</small>
-        <input id="rxUpload" type="file" accept="image/*,.pdf" />
+        <span>Upload prescription image</span>
+        <small>JPG or PNG works best</small>
+        <input id="rxUpload" type="file" accept="image/*" />
       </label>
 
       <div id="preview" class="preview empty">Prescription preview will appear here.</div>
 
-      <button class="btn primary full" id="runExtraction">Run AI Extraction</button>
+      <button class="btn primary full" id="runExtraction">Run Real OCR</button>
     </section>
 
     <section class="review-panel">
@@ -64,11 +64,14 @@
         <button class="btn secondary" id="copyBtn">Copy JSON</button>
       </div>
 
+      <div class="flags"><h3>Raw OCR Text</h3><pre id="rawOcrText" class="json-output"></pre></div>
+
       <pre id="jsonOutput" class="json-output"></pre>
     </section>
   </main>
 
   <footer>RxVision AI MVP demo. Not for clinical use.</footer>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

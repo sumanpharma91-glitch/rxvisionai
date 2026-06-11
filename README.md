@@ -1,19 +1,12 @@
-# RxVision AI MVP Starter
+# RxVision AI Real OCR MVP
 
-This is a simple front-end MVP prototype for RxVision AI.
+This version uses Tesseract.js in the browser for real OCR extraction from JPG/PNG images.
 
-## What is included
-- `index.html` — landing page
-- `mvp.html` — prescription OCR demo screen
-- `styles.css` — styling
-- `script.js` — upload preview, simulated extraction, pharmacist review, JSON export
+## Upload to Vercel
+Upload the contents of this folder, not the folder itself. Keep `index.html` in the root.
 
-## How to deploy on Vercel
-1. Keep all files in the same folder.
-2. Upload the files to your GitHub repository or directly to Vercel.
-3. Make sure `index.html` is lowercase.
-4. Deploy.
-5. Visit your domain.
-
-## Important note
-This is a prototype only. It does not perform real OCR yet. The next step is adding an OCR API and secure backend.
+## Notes
+- This is a prototype only.
+- OCR accuracy depends on prescription image quality.
+- Extracted fields must be verified by a pharmacist.
+- The parser is rule-based and should later be replaced or enhanced with a secure backend + AI extraction.
