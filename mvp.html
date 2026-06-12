@@ -41,15 +41,15 @@
       </div>
 
       <form id="rxForm" class="field-grid">
-        <label>Patient Name<input name="patientName" value="John Sample" /></label>
-        <label>Date of Birth<input name="dob" value="1984-06-15" /></label>
-        <label>Drug Name<input name="drugName" value="Amoxicillin" /></label>
-        <label>Strength<input name="strength" value="500 mg" /></label>
-        <label>Quantity<input name="quantity" value="21" /></label>
-        <label>Refills<input name="refills" value="0" /></label>
-        <label class="wide">Directions<textarea name="directions">Take one capsule by mouth three times daily for 7 days.</textarea></label>
-        <label>Prescriber<input name="prescriber" value="Dr. Jane Smith" /></label>
-        <label>Prescription Date<input name="rxDate" value="2026-06-09" /></label>
+        <label>Patient Name<input name="patientName" placeholder="Not detected yet" /></label>
+        <label>Date of Birth<input name="dob" placeholder="Not detected yet" /></label>
+        <label>Drug Name<input name="drugName" placeholder="Not detected yet" /></label>
+        <label>Strength<input name="strength" placeholder="Not detected yet" /></label>
+        <label>Quantity<input name="quantity" placeholder="Not detected yet" /></label>
+        <label>Refills<input name="refills" placeholder="Not detected yet" /></label>
+        <label class="wide">Directions<textarea name="directions" placeholder="Not detected yet"></textarea></label>
+        <label>Prescriber<input name="prescriber" placeholder="Not detected yet" /></label>
+        <label>Prescription Date<input name="rxDate" placeholder="Not detected yet" /></label>
       </form>
 
       <div class="flags">
@@ -61,6 +61,7 @@
 
       <div class="actions">
         <button class="btn primary" id="approveBtn">Mark Reviewed</button>
+        <button class="btn secondary" id="smartCleanBtn">Smart Cleanup</button>
         <button class="btn secondary" id="copyBtn">Copy JSON</button>
       </div>
 

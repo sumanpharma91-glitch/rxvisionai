@@ -1,12 +1,21 @@
-# RxVision AI Real OCR MVP
+# RxVision AI OCR Cleanup MVP
 
-This version uses Tesseract.js in the browser for real OCR extraction from JPG/PNG images.
+This update improves the browser OCR demo:
 
-## Upload to Vercel
-Upload the contents of this folder, not the folder itself. Keep `index.html` in the root.
+- Removes all sample placeholder field values.
+- Leaves uncertain fields blank instead of exporting fake data.
+- Adds OCR cleanup for common mistakes like `Lazenge` -> `Lozenge` and `IManth` -> `1 Month`.
+- Adds a Smart Cleanup button.
+- Keeps pharmacist verification warnings.
 
-## Notes
-- This is a prototype only.
-- OCR accuracy depends on prescription image quality.
-- Extracted fields must be verified by a pharmacist.
-- The parser is rule-based and should later be replaced or enhanced with a secure backend + AI extraction.
+## Deploy
+Upload the contents of this folder to Vercel, not the parent folder itself.
+
+Required root files:
+
+- index.html
+- mvp.html
+- styles.css
+- script.js
+
+Prototype only. Not for clinical use.
