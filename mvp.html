@@ -57,7 +57,7 @@ function buildJSON(flags=[]){const meds=[...document.querySelectorAll('#medicati
 strength:card.querySelectorAll('input,textarea')[1]?.value||null,
 quantity:card.querySelectorAll('input,textarea')[2]?.value||null,
 refills:card.querySelectorAll('input,textarea')[3]?.value||null,
-directions:card.querySelectorAll('input,textarea')[4]?.value||null.'}}
+directions:card.querySelectorAll('input,textarea')[4]?.value||null}))
 function renderMedications(meds = []) {
   const list = document.getElementById('medicationsList');
   list.innerHTML = '';
