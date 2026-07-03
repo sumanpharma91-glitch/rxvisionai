@@ -63,7 +63,8 @@ Return JSON only with this structure:
   "prescriber": null,
   "prescriptionDate": null,
   "confidenceFlags": [],
-  "verificationStatus": "requires_pharmacist_review",
+"reviewNotes": [],
+"verificationStatus": "requires_pharmacist_review",
   "safetyNote": "Prototype only. Verify every field against the original prescription before use."
 }`
         }
