@@ -36,7 +36,7 @@ Rules:
 - Flag potentially ambiguous abbreviations or unclear characters for pharmacist review.
 - Pharmacist verification is always required.
 - Return JSON only.`
-}
+},
         {
           role: "user",
           content: `OCR text:
