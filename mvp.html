@@ -94,6 +94,48 @@ function renderMedications(meds = []) {
 function updateJSON(flags=[]){document.getElementById('jsonOut').textContent=JSON.stringify(buildJSON(flags),null,2);} document.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',()=>updateJSON()));
 async function copyJSON(){updateJSON(); await navigator.clipboard.writeText(document.getElementById('jsonOut').textContent); alert('JSON copied');}
 function clearFields(update=true){['patientName','dob','drugName','strength','quantity','refills','directions','prescriber','rxDate'].forEach(id=>val(id,'')); if(update) updateJSON();}
+function renderMedications(medications = []) {
+  const container = document.getElementById('medicationsList');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  medications.forEach((med, index) => {
+    const card = document.createElement('div');
+    card.className = 'medication-card';
+
+    card.innerHTML = `
+      <h3>Medication ${index + 1}</h3>
+
+      <div class="field">
+        <label>Drug Name</label>
+        <input value="${med.drugName || ''}">
+      </div>
+
+      <div class="field">
+        <label>Strength</label>
+        <input value="${med.strength || ''}">
+      </div>
+
+      <div class="field">
+        <label>Quantity</label>
+        <input value="${med.quantity || ''}">
+      </div>
+
+      <div class="field">
+        <label>Refills</label>
+        <input value="${med.refills || ''}">
+      </div>
+
+      <div class="field">
+        <label>Directions</label>
+        <textarea>${med.directions || ''}</textarea>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
 </script>
 </body>
 </html>
