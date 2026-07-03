@@ -26,8 +26,41 @@ export default async function handler(req, res) {
         },
         {
           role: "user",
-          content: `OCR text:\n${ocrText}\n\nReturn JSON with: patient{name,dob}, medication{drugName,strength,quantity,refills,directions}, prescriber, prescriptionDate, confidenceFlags, verificationStatus, safetyNote.`,
-        },
+          content: content: `OCR text:
+${ocrText}
+
+Extract all visible prescription information.
+
+Return strict JSON with exactly this structure:
+
+{
+  "patient": {
+    "name": null,
+    "dob": null
+  },
+  "medications": [
+    {
+      "drugName": null,
+      "strength": null,
+      "quantity": null,
+      "refills": null,
+      "directions": null
+    }
+  ],
+  "prescriber": null,
+  "prescriptionDate": null,
+  "confidenceFlags": [],
+  "verificationStatus": "requires_pharmacist_review",
+  "safetyNote": "Prototype only. Verify every field against the original prescription before use."
+}
+
+Rules:
+- Extract every visible medication order.
+- Do not guess missing information.
+- Use null when uncertain.
+- Preserve medication strength exactly as visible.
+- Preserve directions exactly as visible.
+- Return JSON only.`,
       ],
       temperature: 0,
     });
