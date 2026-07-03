@@ -36,6 +36,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
   <label>Review Notes</label>
   <ul id="reviewNotesList"></ul>
 </div><button onclick="copyJSON()">Copy JSON</button>
+<button onclick="downloadJSON()">Download JSON</button>
 <button class="secondary" onclick="clearFields()">Clear</button>
 </section>
 </div>
@@ -127,6 +128,41 @@ function renderMedications(meds = []) {
 }
 function updateJSON(flags=[]){document.getElementById('jsonOut').textContent=JSON.stringify(buildJSON(flags),null,2);} document.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',()=>updateJSON()));
 async function copyJSON(){updateJSON(); await navigator.clipboard.writeText(document.getElementById('jsonOut').textContent); alert('JSON copied');}
+function downloadJSON() {
+  updateJSON();
+
+  const jsonText = document.getElementById('jsonOut').textContent;
+
+  try {
+    const data = JSON.parse(jsonText);
+
+    const patientName = data.patient?.name || 'patient';
+    const safeName = patientName
+      .replace(/[^a-z0-9]/gi, '_')
+      .toLowerCase();
+
+    const blob = new Blob(
+      [JSON.stringify(data, null, 2)],
+      { type: 'application/json' }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+
+    a.href = url;
+    a.download = `rxvision_${safeName}_${Date.now()}.json`;
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+    setStatus('JSON downloaded.', true);
+  } catch (error) {
+    alert('Could not download JSON: ' + error.message);
+  }
+}
 function clearFields(update=true){['patientName','dob','drugName','strength','quantity','refills','directions','prescriber','rxDate'].forEach(id=>val(id,'')); if(update) updateJSON();}
 function renderMedications(medications = []) {
   const container = document.getElementById('medicationsList');
