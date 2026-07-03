@@ -17,9 +17,15 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 <section class="card">
 <h2>1. Upload Prescription</h2>
 <input type="file" id="imageInput" accept="image/*" />
+ <div style="margin:15px 0;">
+  <label for="extractionMode"><strong>Extraction Mode</strong></label>
+  <select id="extractionMode" style="width:100%;padding:12px;margin-top:6px;border:1px solid #ccc;border-radius:8px;">
+    <option value="current">Current Prescription Only</option>
+    <option value="all">All Visible Medication Orders</option>
+  </select>
+</div>
 <img id="preview" class="preview" style="display:none" />
-<button onclick="runOCR()">Scan All Visible Text</button>
-<button onclick="analyzeImageWithAI()">Extract Current Prescription</button>
+<button onclick="processSelectedMode()">Process Prescription</button>
 <p id="status" class="small">Waiting for upload.</p>
 <label>Raw OCR Text</label>
 <textarea id="ocrText" placeholder="OCR output will appear here..."></textarea>
@@ -257,6 +263,15 @@ function renderMedications(medications = []) {
   } catch (error) {
     console.error(error);
     setStatus("AI vision error: " + error.message);
+  }
+}
+  async function processSelectedMode() {
+  const mode = document.getElementById("extractionMode").value;
+
+  if (mode === "current") {
+    await analyzeImageWithAI();
+  } else {
+    await runOCR();
   }
 }
 </script>
