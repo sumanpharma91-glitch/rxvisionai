@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         },
         {
           role: "user",
-          content: content: `OCR text:
+          content: `OCR text:
 ${ocrText}
 
 Extract all visible prescription information.
