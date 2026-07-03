@@ -206,6 +206,59 @@ function renderMedications(medications = []) {
     container.appendChild(card);
   });
 }
+  async function analyzeImageWithAI() {
+  const file = imageInput.files[0];
+
+  if (!file) {
+    alert("Upload an image first");
+    return;
+  }
+
+  try {
+    setStatus("Sending image to secure AI vision...");
+
+    const imageBase64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("Could not read image"));
+
+      reader.readAsDataURL(file);
+    });
+
+    const res = await fetch("/api/vision-extract", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ imageBase64 })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "AI vision extraction failed");
+    }
+
+    val("patientName", data.patient?.name);
+    val("dob", data.patient?.dob);
+    val("prescriber", data.prescriber);
+    val("rxDate", data.prescriptionDate);
+
+    window.latestReviewNotes = data.reviewNotes || [];
+
+    renderMedications(data.medications || []);
+
+    document.getElementById("jsonOut").textContent =
+      JSON.stringify(data, null, 2);
+
+    setStatus("AI vision extraction complete. Pharmacist review required.", true);
+
+  } catch (error) {
+    console.error(error);
+    setStatus("AI vision error: " + error.message);
+  }
+}
 </script>
 </body>
 </html>
