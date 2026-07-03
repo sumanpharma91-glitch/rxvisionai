@@ -21,18 +21,14 @@ export default async function handler(req, res) {
       messages: [
         {
           role: "system",
-          content:
-            "Extract prescription/order information into strict JSON only. Use null when unsure. Do not guess. Pharmacist verification is required.",
+          content: "Extract prescription/order information into strict JSON only. Use null when unsure. Do not guess. Pharmacist verification is required."
         },
         {
           role: "user",
           content: `OCR text:
 ${ocrText}
 
-Extract all visible prescription information.
-
-Return strict JSON with exactly this structure:
-
+Return JSON only with this structure:
 {
   "patient": {
     "name": null,
@@ -52,30 +48,17 @@ Return strict JSON with exactly this structure:
   "confidenceFlags": [],
   "verificationStatus": "requires_pharmacist_review",
   "safetyNote": "Prototype only. Verify every field against the original prescription before use."
-}
-
-Rules:
-- Extract every visible medication order.
-- Do not guess missing information.
-- Use null when uncertain.
-- Preserve medication strength exactly as visible.
-- Preserve directions exactly as visible.
-- Return JSON only.`,
+}`
+        }
       ],
-      temperature: 0,
+      temperature: 0
     });
 
-    const text = response.choices[0].message.content;
-
-    const cleaned = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+    const text = response.choices[0].message.content || "{}";
+    const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
 
     return res.status(200).json(JSON.parse(cleaned));
   } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
+    return res.status(500).json({ error: error.message });
   }
 }
