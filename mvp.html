@@ -18,8 +18,8 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 <h2>1. Upload Prescription</h2>
 <input type="file" id="imageInput" accept="image/*" />
 <img id="preview" class="preview" style="display:none" />
-<button onclick="runOCR()">Run OCR</button>
-<button onclick="analyzeImageWithAI()">Analyze Image with AI</button>
+<button onclick="runOCR()">Scan All Visible Text</button>
+<button onclick="analyzeImageWithAI()">Extract Current Prescription</button>
 <p id="status" class="small">Waiting for upload.</p>
 <label>Raw OCR Text</label>
 <textarea id="ocrText" placeholder="OCR output will appear here..."></textarea>
