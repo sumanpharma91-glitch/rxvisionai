@@ -28,11 +28,8 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 <h2>2. Pharmacist Review Fields</h2>
 <div class="field"><label>Patient Name</label><input id="patientName"></div>
 <div class="field"><label>DOB</label><input id="dob"></div>
-<div class="field"><label>Drug Name</label><input id="drugName"></div>
-<div class="field"><label>Strength</label><input id="strength"></div>
-<div class="field"><label>Quantity</label><input id="quantity"></div>
-<div class="field"><label>Refills</label><input id="refills"></div>
-<div class="field"><label>Directions</label><textarea id="directions"></textarea></div>
+<h3>Medications Found</h3>
+<div id="medicationsList"></div>
 <div class="field"><label>Prescriber</label><input id="prescriber"></div>
 <div class="field"><label>Prescription Date</label><input id="rxDate"></div>
 <button onclick="copyJSON()">Copy JSON</button>
@@ -54,6 +51,43 @@ function val(id,v){document.getElementById(id).value=v||'';}
 function quickLocalExtract(text){clearFields(false); const t=text.replace(/\s+/g,' ').trim(); const qty=t.match(/(?:qty|quantity|dispense|#)\s*[:#-]?\s*(\d+)/i); if(qty) val('quantity',qty[1]); const strength=t.match(/(\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|units?))/i); if(strength) val('strength',strength[1]); const date=t.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{2,4})/); if(date) val('rxDate',date[1]); updateJSON();}
 async function cleanWithAI(){const text=document.getElementById('ocrText').value.trim(); if(!text){alert('Run OCR first or paste OCR text.');return;} setStatus('Sending OCR text to secure AI extraction...'); const res=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ocrText:text})}); const data=await res.json(); if(!res.ok){throw new Error(data.error||'AI extraction failed');} const med=(data.medications&&data.medications[0])||{}; val('patientName',data.patient?.name); val('dob',data.patient?.dob); val('drugName',med.drugName); val('strength',med.strength); val('quantity',med.quantity); val('refills',med.refills); val('directions',med.directions); val('prescriber',data.prescriber); val('rxDate',data.prescriptionDate); updateJSON(data.confidenceFlags||[]); setStatus('AI extraction complete. Pharmacist review still required.',true);}
 function buildJSON(flags=[]){return {patient:{name:document.getElementById('patientName').value||null,dob:document.getElementById('dob').value||null},medications:[{drugName:document.getElementById('drugName').value||null,strength:document.getElementById('strength').value||null,quantity:document.getElementById('quantity').value||null,refills:document.getElementById('refills').value||null,directions:document.getElementById('directions').value||null}],prescriber:document.getElementById('prescriber').value||null,prescriptionDate:document.getElementById('rxDate').value||null,confidenceFlags:flags,verificationStatus:'requires_pharmacist_review',safetyNote:'Prototype only. Verify every field against the original prescription before use.'}}
+function renderMedications(meds = []) {
+  const list = document.getElementById('medicationsList');
+  list.innerHTML = '';
+
+  if (!meds.length) {
+    list.innerHTML = '<p>No medications found.</p>';
+    return;
+  }
+
+  meds.forEach((med, index) => {
+    const card = document.createElement('div');
+    card.className = 'field';
+    card.style.cssText =
+      'border:1px solid #ddd;padding:15px;margin-bottom:15px;border-radius:10px;';
+
+    card.innerHTML = `
+      <h4>Medication ${index + 1}</h4>
+
+      <label>Drug Name</label>
+      <input class="med-drugName" value="${med.drugName || ''}">
+
+      <label>Strength</label>
+      <input class="med-strength" value="${med.strength || ''}">
+
+      <label>Quantity</label>
+      <input class="med-quantity" value="${med.quantity || ''}">
+
+      <label>Refills</label>
+      <input class="med-refills" value="${med.refills || ''}">
+
+      <label>Directions</label>
+      <textarea class="med-directions">${med.directions || ''}</textarea>
+    `;
+
+    list.appendChild(card);
+  });
+}
 function updateJSON(flags=[]){document.getElementById('jsonOut').textContent=JSON.stringify(buildJSON(flags),null,2);} document.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',()=>updateJSON()));
 async function copyJSON(){updateJSON(); await navigator.clipboard.writeText(document.getElementById('jsonOut').textContent); alert('JSON copied');}
 function clearFields(update=true){['patientName','dob','drugName','strength','quantity','refills','directions','prescriber','rxDate'].forEach(id=>val(id,'')); if(update) updateJSON();}
