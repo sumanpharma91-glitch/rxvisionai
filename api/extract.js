@@ -30,7 +30,10 @@ Rules:
 - Use null when a field cannot be reliably determined.
 - Preserve medication names, strengths, quantities, refills, and directions as closely as possible to the source text.
 - Do not silently correct ambiguous OCR.
-- If any field is uncertain, ambiguous, partially unreadable, conflicting, or likely affected by OCR error, add a specific message to confidenceFlags.
+- Add confidenceFlags only for OCR uncertainty, unreadable text, conflicting text, missing critical fields, or values that may have been misread.
+- Do not flag standard prescription abbreviations by themselves, such as PO, IV, BID, PRN, q6, or q12, unless the OCR text is unclear.
+- Each confidence flag should identify the medication and field when possible.
+- If a drug name, strength, quantity, refill, or direction appears uncertain, add a specific review message.
 - Confidence flags must identify the medication and field when possible.
 - Missing quantity or refills alone should not automatically be flagged if those fields are simply not present.
 - Flag potentially ambiguous abbreviations or unclear characters for pharmacist review.
