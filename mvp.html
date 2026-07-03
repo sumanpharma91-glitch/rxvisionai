@@ -83,6 +83,7 @@ function buildJSON(flags = []) {
     prescriber: val('prescriber') || null,
     prescriptionDate: val('rxDate') || null,
     confidenceFlags: flags,
+    reviewNotes:window.latestReviewNotes||[],
     verificationStatus: 'requires_pharmacist_review',
     safetyNote: 'Prototype only. Verify every field against the original prescription before use.'
   };
