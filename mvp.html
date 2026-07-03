@@ -32,7 +32,10 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 <div id="medicationsList"></div>
 <div class="field"><label>Prescriber</label><input id="prescriber"></div>
 <div class="field"><label>Prescription Date</label><input id="rxDate"></div>
-<button onclick="copyJSON()">Copy JSON</button>
+<div class="field">
+  <label>Review Notes</label>
+  <ul id="reviewNotesList"></ul>
+</div><button onclick="copyJSON()">Copy JSON</button>
 <button class="secondary" onclick="clearFields()">Clear</button>
 </section>
 </div>
