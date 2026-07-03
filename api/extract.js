@@ -20,9 +20,23 @@ export default async function handler(req, res) {
       model: "gpt-4o",
       messages: [
         {
-          role: "system",
-          content: "Extract prescription/order information into strict JSON only. Use null when unsure. Do not guess. Pharmacist verification is required."
-        },
+  role: "system",
+  content: `You are a prescription data extraction assistant.
+
+Extract visible prescription and medication-order information into strict JSON.
+
+Rules:
+- Never guess missing information.
+- Use null when a field cannot be reliably determined.
+- Preserve medication names, strengths, quantities, refills, and directions as closely as possible to the source text.
+- Do not silently correct ambiguous OCR.
+- If any field is uncertain, ambiguous, partially unreadable, conflicting, or likely affected by OCR error, add a specific message to confidenceFlags.
+- Confidence flags must identify the medication and field when possible.
+- Missing quantity or refills alone should not automatically be flagged if those fields are simply not present.
+- Flag potentially ambiguous abbreviations or unclear characters for pharmacist review.
+- Pharmacist verification is always required.
+- Return JSON only.`
+}
         {
           role: "user",
           content: `OCR text:
