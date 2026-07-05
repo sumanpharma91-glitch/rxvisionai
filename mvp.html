@@ -368,6 +368,11 @@ function renderMedications(medications = []) {
    window.currentExtractionId = crypto.randomUUID();
 window.currentExtractionCreatedAt = new Date().toISOString();
    window.currentVerifiedAt = null;
+   document.getElementById('pharmacistName').value = '';
+document.getElementById('verifyPatient').checked = false;
+document.getElementById('verifyMedication').checked = false;
+document.getElementById('verifyDirections').checked = false;
+document.getElementById('verifyPrescriber').checked = false;
 
   if (mode === 'current') {
     await analyzeImageWithAI();
