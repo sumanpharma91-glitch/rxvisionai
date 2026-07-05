@@ -360,6 +360,7 @@ function renderMedications(medications = []) {
   const mode = document.getElementById('extractionMode').value;
    window.currentExtractionId = crypto.randomUUID();
 window.currentExtractionCreatedAt = new Date().toISOString();
+   window.currentVerifiedAt = null;
 
   if (mode === 'current') {
     await analyzeImageWithAI();
