@@ -470,6 +470,53 @@ function renderMedications(medications = []) {
     }
   }
 }
+ window.auditEvents = window.auditEvents || [];
+
+function addAuditEvent(eventType, details = {}) {
+  const event = {
+    eventId: crypto.randomUUID(),
+    extractionId: window.currentExtractionId || null,
+    timestamp: new Date().toISOString(),
+    eventType: eventType,
+    details: details
+  };
+
+  window.auditEvents.push(event);
+  renderAuditTrail();
+}
+
+function renderAuditTrail() {
+  const container = document.getElementById('auditTrail');
+  if (!container) return;
+
+  if (window.auditEvents.length === 0) {
+    container.innerHTML = '<p>No audit events yet.</p>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  window.auditEvents.forEach(event => {
+    const item = document.createElement('div');
+
+    item.style.padding = '10px';
+    item.style.marginBottom = '8px';
+    item.style.border = '1px solid #ddd';
+    item.style.borderRadius = '8px';
+
+    const title = document.createElement('strong');
+    title.textContent = event.eventType;
+
+    const time = document.createElement('div');
+    time.className = 'small';
+    time.textContent = new Date(event.timestamp).toLocaleString();
+
+    item.appendChild(title);
+    item.appendChild(time);
+
+    container.appendChild(item);
+  });
+}
 </script>
 </body>
 </html>
