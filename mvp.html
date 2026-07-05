@@ -172,8 +172,8 @@ createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreated
   document.getElementById('verifyPatient')?.checked &&
   document.getElementById('verifyMedication')?.checked &&
   document.getElementById('verifyDirections')?.checked &&
-  document.getElementById('verifyPrescriber')?.checked
-    document.getElementById('pharmacistName')?.value.trim() &&
+  document.getElementById('verifyPrescriber')?.checked &&
+document.getElementById('pharmacistName')?.value.trim()
     ? 'pharmacist_verified'
     : 'requires_pharmacist_review',
    
