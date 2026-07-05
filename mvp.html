@@ -133,6 +133,29 @@ async function cleanWithAI(){const text=document.getElementById('ocrText').value
 function buildJSON(flags = []) {
   const meds = [...document.querySelectorAll('#medicationsList .medication-card')].map(card => {
     const fields = card.querySelectorAll('input, textarea');
+   const patientOK =
+  val('patientName') &&
+  val('dob');
+
+const prescriberOK =
+  val('prescriber');
+
+const medicationsOK =
+  meds.length > 0 &&
+  meds.every(m =>
+    m.drugName &&
+    m.strength &&
+    m.directions
+  );
+
+const pharmacistOK =
+  document.getElementById('pharmacistName')?.value.trim();
+
+const checksOK =
+  document.getElementById('verifyPatient').checked &&
+  document.getElementById('verifyMedication').checked &&
+  document.getElementById('verifyDirections').checked &&
+  document.getElementById('verifyPrescriber').checked;
 
     return {
       drugName: fields[0]?.value || null,
@@ -163,32 +186,23 @@ createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreated
   directionsVerified: document.getElementById('verifyDirections').checked,
   prescriberVerified: document.getElementById('verifyPrescriber').checked
 },
-   verificationStatus:
-  val('patientName') &&
-  val('dob') &&
-  meds.length > 0 &&
-  meds.every(med => med.drugName && med.directions) &&
-  val('prescriber') &&
-  document.getElementById('verifyPatient')?.checked &&
-  document.getElementById('verifyMedication')?.checked &&
-  document.getElementById('verifyDirections')?.checked &&
-  document.getElementById('verifyPrescriber')?.checked &&
-document.getElementById('pharmacistName')?.value.trim()
+  verificationStatus:
+  patientOK &&
+  prescriberOK &&
+  medicationsOK &&
+  pharmacistOK &&
+  checksOK
     ? 'pharmacist_verified'
     : 'requires_pharmacist_review',
    
-   verifiedAt:
-  val('patientName') &&
-  val('dob') &&
-  meds.length > 0 &&
-  meds.every(med => med.drugName && med.directions) &&
-  val('prescriber') &&
-  document.getElementById('verifyPatient')?.checked &&
-  document.getElementById('verifyMedication')?.checked &&
-  document.getElementById('verifyDirections')?.checked &&
-  document.getElementById('verifyPrescriber')?.checked &&
-document.getElementById('pharmacistName')?.value.trim()
-    ? (window.currentVerifiedAt || (window.currentVerifiedAt = new Date().toISOString()))
+ verifiedAt:
+  patientOK &&
+  prescriberOK &&
+  medicationsOK &&
+  pharmacistOK &&
+  checksOK
+    ? (window.currentVerifiedAt ||
+       (window.currentVerifiedAt = new Date().toISOString()))
     : null,
     safetyNote: 'Prototype only. Verify every field against the original prescription before use.'
   };
