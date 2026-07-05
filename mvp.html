@@ -365,14 +365,16 @@ function renderMedications(medications = []) {
 }
   async function processSelectedMode() {
   const mode = document.getElementById('extractionMode').value;
-   window.currentExtractionId = crypto.randomUUID();
-window.currentExtractionCreatedAt = new Date().toISOString();
-   window.currentVerifiedAt = null;
-   document.getElementById('pharmacistName').value = '';
-document.getElementById('verifyPatient').checked = false;
-document.getElementById('verifyMedication').checked = false;
-document.getElementById('verifyDirections').checked = false;
-document.getElementById('verifyPrescriber').checked = false;
+
+  window.currentExtractionId = crypto.randomUUID();
+  window.currentExtractionCreatedAt = new Date().toISOString();
+  window.currentVerifiedAt = null;
+
+  document.getElementById('pharmacistName').value = '';
+  document.getElementById('verifyPatient').checked = false;
+  document.getElementById('verifyMedication').checked = false;
+  document.getElementById('verifyDirections').checked = false;
+  document.getElementById('verifyPrescriber').checked = false;
 
   if (mode === 'current') {
     await analyzeImageWithAI();
