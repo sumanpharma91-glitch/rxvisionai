@@ -272,6 +272,7 @@ function renderMedications(medications = []) {
     await analyzeImageWithAI();
   } else {
     await runOCR();
+    await cleanWithAI();
   }
 }
 </script>
