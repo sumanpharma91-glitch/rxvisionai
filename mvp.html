@@ -119,8 +119,8 @@ function buildJSON(flags = []) {
 
   return {
    extractionMode: document.getElementById('extractionMode').value,
-   extractionId: crypto.randomUUID(),
-createdAt: new Date().toISOString(),
+   extractionId: window.currentExtractionId || (window.currentExtractionId = crypto.randomUUID()),
+createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreatedAt = new Date().toISOString()),
     patient: {
       name: val('patientName') || null,
       dob: val('dob') || null
@@ -306,6 +306,8 @@ function renderMedications(medications = []) {
 }
   async function processSelectedMode() {
   const mode = document.getElementById('extractionMode').value;
+   window.currentExtractionId = crypto.randomUUID();
+window.currentExtractionCreatedAt = new Date().toISOString();
 
   if (mode === 'current') {
     await analyzeImageWithAI();
