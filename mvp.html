@@ -173,8 +173,10 @@ createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreated
   document.getElementById('verifyMedication')?.checked &&
   document.getElementById('verifyDirections')?.checked &&
   document.getElementById('verifyPrescriber')?.checked
+    document.getElementById('pharmacistName')?.value.trim() &&
     ? 'pharmacist_verified'
     : 'requires_pharmacist_review',
+   
    verifiedAt:
   val('patientName') &&
   val('dob') &&
@@ -185,6 +187,7 @@ createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreated
   document.getElementById('verifyMedication')?.checked &&
   document.getElementById('verifyDirections')?.checked &&
   document.getElementById('verifyPrescriber')?.checked
+   document.getElementById('pharmacistName')?.value.trim() &&
     ? (window.currentVerifiedAt || (window.currentVerifiedAt = new Date().toISOString()))
     : null,
     safetyNote: 'Prototype only. Verify every field against the original prescription before use.'
