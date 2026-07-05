@@ -43,7 +43,10 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
   <ul id="reviewNotesList"></ul>
  <div style="margin:18px 0;padding:15px;border:1px solid #ddd;border-radius:10px;">
   <h3>Pharmacist Verification</h3>
-
+<div class="field">
+  <label>Pharmacist Name / Initials</label>
+  <input id="pharmacistName" placeholder="e.g. BSP">
+</div>
   <label style="display:block;margin:8px 0;">
     <input type="checkbox" id="verifyPatient">
     Patient information verified
@@ -154,6 +157,7 @@ createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreated
     confidenceFlags: flags,
     reviewNotes:window.latestReviewNotes||[],
    pharmacistVerification: {
+    pharmacistName: document.getElementById('pharmacistName')?.value.trim() || null,
   patientVerified: document.getElementById('verifyPatient').checked,
   medicationVerified: document.getElementById('verifyMedication').checked,
   directionsVerified: document.getElementById('verifyDirections').checked,
