@@ -186,8 +186,8 @@ document.getElementById('pharmacistName')?.value.trim()
   document.getElementById('verifyPatient')?.checked &&
   document.getElementById('verifyMedication')?.checked &&
   document.getElementById('verifyDirections')?.checked &&
-  document.getElementById('verifyPrescriber')?.checked
-   document.getElementById('pharmacistName')?.value.trim() &&
+  document.getElementById('verifyPrescriber')?.checked &&
+document.getElementById('pharmacistName')?.value.trim()
     ? (window.currentVerifiedAt || (window.currentVerifiedAt = new Date().toISOString()))
     : null,
     safetyNote: 'Prototype only. Verify every field against the original prescription before use.'
