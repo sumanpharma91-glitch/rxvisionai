@@ -41,6 +41,29 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 <div class="field">
   <label>Review Notes</label>
   <ul id="reviewNotesList"></ul>
+ <div style="margin:18px 0;padding:15px;border:1px solid #ddd;border-radius:10px;">
+  <h3>Pharmacist Verification</h3>
+
+  <label style="display:block;margin:8px 0;">
+    <input type="checkbox" id="verifyPatient">
+    Patient information verified
+  </label>
+
+  <label style="display:block;margin:8px 0;">
+    <input type="checkbox" id="verifyMedication">
+    Medication and strength verified
+  </label>
+
+  <label style="display:block;margin:8px 0;">
+    <input type="checkbox" id="verifyDirections">
+    Directions verified
+  </label>
+
+  <label style="display:block;margin:8px 0;">
+    <input type="checkbox" id="verifyPrescriber">
+    Prescriber verified
+  </label>
+</div>
 </div><button onclick="copyJSON()">Copy JSON</button>
 <button onclick="downloadJSON()">Download JSON</button>
 <button class="secondary" onclick="clearFields()">Clear</button>
@@ -130,6 +153,12 @@ createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreated
     prescriptionDate: val('rxDate') || null,
     confidenceFlags: flags,
     reviewNotes:window.latestReviewNotes||[],
+   pharmacistVerification: {
+  patientVerified: document.getElementById('verifyPatient').checked,
+  medicationVerified: document.getElementById('verifyMedication').checked,
+  directionsVerified: document.getElementById('verifyDirections').checked,
+  prescriberVerified: document.getElementById('verifyPrescriber').checked
+},
     verificationStatus: 'requires_pharmacist_review',
     safetyNote: 'Prototype only. Verify every field against the original prescription before use.'
   };
