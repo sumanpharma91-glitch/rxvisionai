@@ -118,6 +118,7 @@ function buildJSON(flags = []) {
   });
 
   return {
+   extractionMode: document.getElementById('extractionMode').value,
     patient: {
       name: val('patientName') || null,
       dob: val('dob') || null
