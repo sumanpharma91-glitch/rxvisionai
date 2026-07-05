@@ -131,31 +131,10 @@ function val(id, v) {
 function quickLocalExtract(text){clearFields(false); const t=text.replace(/\s+/g,' ').trim(); const qty=t.match(/(?:qty|quantity|dispense|#)\s*[:#-]?\s*(\d+)/i); if(qty) val('quantity',qty[1]); const strength=t.match(/(\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|units?))/i); if(strength) val('strength',strength[1]); const date=t.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{2,4})/); if(date) val('rxDate',date[1]); updateJSON();}
 async function cleanWithAI(){const text=document.getElementById('ocrText').value.trim();if(!text){alert('Run OCR first or paste OCR text.');return;}setStatus('Sending OCR text to secure AI extraction...');const res=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ocrText:text})});const data=await res.json();renderMedications(data.medications || []);if(!res.ok){throw new Error(data.error||'AI extraction failed');}window.latestReviewNotes=data.reviewNotes||[];val('patientName',data.patient?.name);val('dob',data.patient?.dob);val('prescriber',data.prescriber);val('rxDate',data.prescriptionDate);renderMedications(data.medications||[]);updateJSON(data.confidenceFlags||[]);setStatus('AI extraction complete. Pharmacist review still required.',true);}
 function buildJSON(flags = []) {
-  const meds = [...document.querySelectorAll('#medicationsList .medication-card')].map(card => {
+  const meds = [
+    ...document.querySelectorAll('#medicationsList .medication-card')
+  ].map(card => {
     const fields = card.querySelectorAll('input, textarea');
-   const patientOK =
-  val('patientName') &&
-  val('dob');
-
-const prescriberOK =
-  val('prescriber');
-
-const medicationsOK =
-  meds.length > 0 &&
-  meds.every(m =>
-    m.drugName &&
-    m.strength &&
-    m.directions
-  );
-
-const pharmacistOK =
-  document.getElementById('pharmacistName')?.value.trim();
-
-const checksOK =
-  document.getElementById('verifyPatient').checked &&
-  document.getElementById('verifyMedication').checked &&
-  document.getElementById('verifyDirections').checked &&
-  document.getElementById('verifyPrescriber').checked;
 
     return {
       drugName: fields[0]?.value || null,
@@ -166,27 +145,102 @@ const checksOK =
     };
   });
 
+  const patientOK =
+    !!val('patientName') &&
+    !!val('dob');
+
+  const prescriberOK =
+    !!val('prescriber');
+
+  const medicationsOK =
+    meds.length > 0 &&
+    meds.every(m =>
+      !!m.drugName &&
+      !!m.strength &&
+      !!m.directions
+    );
+
+  const pharmacistOK =
+    !!document.getElementById('pharmacistName')?.value.trim();
+
+  const checksOK =
+    !!document.getElementById('verifyPatient')?.checked &&
+    !!document.getElementById('verifyMedication')?.checked &&
+    !!document.getElementById('verifyDirections')?.checked &&
+    !!document.getElementById('verifyPrescriber')?.checked;
+
+  const fullyVerified =
+    patientOK &&
+    prescriberOK &&
+    medicationsOK &&
+    pharmacistOK &&
+    checksOK;
+
   return {
-   extractionMode: document.getElementById('extractionMode').value,
-   extractionId: window.currentExtractionId || (window.currentExtractionId = crypto.randomUUID()),
-createdAt: window.currentExtractionCreatedAt || (window.currentExtractionCreatedAt = new Date().toISOString()),
+    extractionMode:
+      document.getElementById('extractionMode')?.value || 'current',
+
+    extractionId:
+      window.currentExtractionId ||
+      (window.currentExtractionId = crypto.randomUUID()),
+
+    createdAt:
+      window.currentCreatedAt ||
+      (window.currentCreatedAt = new Date().toISOString()),
+
     patient: {
       name: val('patientName') || null,
       dob: val('dob') || null
     },
+
     medications: meds,
-    prescriber: val('prescriber') || null,
-    prescriptionDate: val('rxDate') || null,
-    confidenceFlags: flags,
-    reviewNotes:window.latestReviewNotes||[],
-   pharmacistVerification: {
-    pharmacistName: document.getElementById('pharmacistName')?.value.trim() || null,
-  patientVerified: document.getElementById('verifyPatient').checked,
-  medicationVerified: document.getElementById('verifyMedication').checked,
-  directionsVerified: document.getElementById('verifyDirections').checked,
-  prescriberVerified: document.getElementById('verifyPrescriber').checked
-},
-  verificationStatus:
+
+    prescriber:
+      val('prescriber') || null,
+
+    prescriptionDate:
+      val('rxDate') || null,
+
+    confidenceFlags:
+      flags,
+
+    reviewNotes:
+      window.latestReviewNotes || [],
+
+    pharmacistVerification: {
+      pharmacistName:
+        document.getElementById('pharmacistName')?.value.trim() || null,
+
+      patientVerified:
+        !!document.getElementById('verifyPatient')?.checked,
+
+      medicationVerified:
+        !!document.getElementById('verifyMedication')?.checked,
+
+      directionsVerified:
+        !!document.getElementById('verifyDirections')?.checked,
+
+      prescriberVerified:
+        !!document.getElementById('verifyPrescriber')?.checked
+    },
+
+    verificationStatus:
+      fullyVerified
+        ? 'pharmacist_verified'
+        : 'requires_pharmacist_review',
+
+    verifiedAt:
+      fullyVerified
+        ? (
+            window.currentVerifiedAt ||
+            (window.currentVerifiedAt = new Date().toISOString())
+          )
+        : null,
+
+    safetyNote:
+      'Prototype only. Verify every field against the original prescription before use.'
+  };
+}  verificationStatus:
   patientOK &&
   prescriberOK &&
   medicationsOK &&
