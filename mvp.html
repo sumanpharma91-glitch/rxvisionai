@@ -260,7 +260,6 @@ function downloadJSON() {
   a.remove();
 
   URL.revokeObjectURL(url);
-}
   }
 }
 function clearFields(update=true){['patientName','dob','drugName','strength','quantity','refills','directions','prescriber','rxDate'].forEach(id=>val(id,'')); if(update) updateJSON();}
