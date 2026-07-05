@@ -302,13 +302,16 @@ function renderMedications(medications = []) {
   }
 }
   async function processSelectedMode() {
-  const mode = document.getElementById("extractionMode").value;
+  const mode = document.getElementById('extractionMode').value;
 
-  if (mode === "current") {
+  if (mode === 'current') {
     await analyzeImageWithAI();
   } else {
-    await runOCR();
-    await cleanWithAI();
+    const ocrSuccess = await runOCR();
+
+    if (ocrSuccess) {
+      await cleanWithAI();
+    }
   }
 }
 </script>
