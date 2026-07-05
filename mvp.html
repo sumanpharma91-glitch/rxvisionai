@@ -453,6 +453,12 @@ function renderMedications(medications = []) {
   window.currentExtractionId = crypto.randomUUID();
   window.currentExtractionCreatedAt = new Date().toISOString();
   window.currentVerifiedAt = null;
+   addAuditEvent('extraction_started', {
+  mode: mode
+});
+   addAuditEvent('extraction_completed', {
+  mode: mode
+});
 
   document.getElementById('pharmacistName').value = '';
   document.getElementById('verifyPatient').checked = false;
