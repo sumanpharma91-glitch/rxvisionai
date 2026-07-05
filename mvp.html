@@ -231,7 +231,24 @@ function renderMedications(meds = []) {
   });
 }
 function updateJSON(flags=[]){document.getElementById('jsonOut').textContent=JSON.stringify(buildJSON(flags),null,2);} document.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',()=>updateJSON()));
-async function copyJSON(){updateJSON(); await navigator.clipboard.writeText(document.getElementById('jsonOut').textContent); alert('JSON copied');}
+async function copyJSON() {
+  const data = buildJSON();
+
+  if (data.verificationStatus !== 'pharmacist_verified') {
+    const proceed = confirm(
+      'WARNING: This prescription has not been fully verified by a pharmacist.\n\n' +
+      'Do you still want to copy the JSON?'
+    );
+
+    if (!proceed) return;
+  }
+
+  const jsonText = JSON.stringify(data, null, 2);
+  document.getElementById('jsonOut').textContent = jsonText;
+
+  await navigator.clipboard.writeText(jsonText);
+  alert('JSON copied');
+}
 function downloadJSON() {
   const data = buildJSON();
 
