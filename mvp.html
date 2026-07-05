@@ -56,7 +56,43 @@ const imageInput=document.getElementById('imageInput');
 const preview=document.getElementById('preview');
 imageInput.addEventListener('change',()=>{const f=imageInput.files[0]; if(!f)return; preview.src=URL.createObjectURL(f); preview.style.display='block';});
 function setStatus(t, ok=false){const el=document.getElementById('status'); el.textContent=t; el.className=ok?'small ok':'small';}
-async function runOCR(){const file=imageInput.files[0]; if(!file){alert('Upload an image first');return;} setStatus('Processing OCR...'); const result=await Tesseract.recognize(file,'eng',{logger:m=>{if(m.status) setStatus(m.status+' '+Math.round((m.progress||0)*100)+'%');}}); const text=result.data.text||''; document.getElementById('ocrText').value=text; quickLocalExtract(text); setStatus('OCR complete. Now click Clean with AI for better extraction.', true);}
+async function runOCR() {
+  const file = imageInput.files[0];
+
+  if (!file) {
+    alert('Upload an image first');
+    return false;
+  }
+
+  try {
+    setStatus('Running OCR...');
+
+    const result = await Tesseract.recognize(
+      file,
+      'eng',
+      {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            setStatus(
+              `Running OCR... ${Math.round((m.progress || 0) * 100)}%`
+            );
+          }
+        }
+      }
+    );
+
+    document.getElementById('ocrText').value =
+      result.data.text || '';
+
+    setStatus('OCR complete.', true);
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    setStatus('OCR failed: ' + error.message);
+    return false;
+  }
+}
 function val(id, v) {
   const el = document.getElementById(id);
 
