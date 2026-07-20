@@ -222,6 +222,7 @@ function buildJSON(flags = []) {
     prescriptionDate:
       val('rxDate') || null,
 
+   fieldConfidence: window.latestFieldConfidence || null,
     confidenceFlags:
       flags,
 
