@@ -514,8 +514,63 @@ function addAuditEvent(eventType, details = {}) {
   window.auditEvents.push(event);
   renderAuditTrail();
 }
+function renderConfidencePanel(conf) {
+  const panel = document.getElementById("confidencePanel");
 
-function renderAuditTrail() {
+  if (!panel) return;
+
+  if (!conf) {
+    panel.innerHTML = "<p>No confidence data available.</p>";
+    return;
+  }
+
+  function badge(score) {
+    let color = "#22c55e"; // High
+
+    if (score < 90) color = "#f59e0b"; // Medium
+    if (score < 75) color = "#ef4444"; // Low
+
+    return `<span style="
+      display:inline-block;
+      min-width:50px;
+      text-align:center;
+      padding:2px 8px;
+      border-radius:12px;
+      color:white;
+      background:${color};
+      font-weight:bold;
+    ">${score}%</span>`;
+  }
+
+  panel.innerHTML = `
+    <table style="width:100%;border-collapse:collapse">
+      <tr>
+        <th align="left">Field</th>
+        <th align="right">Confidence</th>
+      </tr>
+
+      <tr>
+        <td>Patient Name</td>
+        <td align="right">${badge(conf.patient?.name ?? 0)}</td>
+      </tr>
+
+      <tr>
+        <td>DOB</td>
+        <td align="right">${badge(conf.patient?.dob ?? 0)}</td>
+      </tr>
+
+      <tr>
+        <td>Prescriber</td>
+        <td align="right">${badge(conf.prescriber ?? 0)}</td>
+      </tr>
+
+      <tr>
+        <td>Prescription Date</td>
+        <td align="right">${badge(conf.prescriptionDate ?? 0)}</td>
+      </tr>
+    </table>
+  `;
+}function renderAuditTrail() {
   const container = document.getElementById('auditTrail');
   if (!container) return;
 
