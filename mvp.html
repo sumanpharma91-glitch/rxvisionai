@@ -465,6 +465,7 @@ function renderMedications(medications = []) {
   window.currentExtractionCreatedAt = new Date().toISOString();
   window.currentVerifiedAt = null;
    window.verificationLogged = false;
+   window.latestFieldConfidence = null;
    addAuditEvent('extraction_started', {
   mode: mode
 });
