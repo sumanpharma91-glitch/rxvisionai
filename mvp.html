@@ -463,6 +463,7 @@ function renderMedications(medications = []) {
   window.currentExtractionId = crypto.randomUUID();
   window.currentExtractionCreatedAt = new Date().toISOString();
   window.currentVerifiedAt = null;
+   window.verificationLogged = false;
    addAuditEvent('extraction_started', {
   mode: mode
 });
