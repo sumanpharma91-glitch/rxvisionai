@@ -439,6 +439,10 @@ function renderMedications(medications = []) {
     if (!res.ok) {
       throw new Error(data.error || "AI vision extraction failed");
     }
+   window.latestFieldConfidence = data.fieldConfidence || null;
+window.latestConfidenceFlags = data.confidenceFlags || [];
+window.latestReviewNotes = data.reviewNotes || [];
+   console.log("VISION FIELD CONFIDENCE:", data.fieldConfidence);
 
     val("patientName", data.patient?.name);
     val("dob", data.patient?.dob);
