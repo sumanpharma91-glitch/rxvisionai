@@ -455,6 +455,25 @@ window.latestReviewNotes = data.reviewNotes || [];
     val("dob", data.patient?.dob);
     val("prescriber", data.prescriber);
     val("rxDate", data.prescriptionDate);
+   applyConfidenceHighlight(
+  "patientName",
+  data.fieldConfidence?.patient?.name ?? 0
+);
+
+applyConfidenceHighlight(
+  "dob",
+  data.fieldConfidence?.patient?.dob ?? 0
+);
+
+applyConfidenceHighlight(
+  "prescriber",
+  data.fieldConfidence?.prescriber ?? 0
+);
+
+applyConfidenceHighlight(
+  "rxDate",
+  data.fieldConfidence?.prescriptionDate ?? 0
+);
 
     
 
