@@ -542,7 +542,40 @@ function renderConfidencePanel(conf) {
       font-weight:bold;
     ">${score}%</span>`;
   }
+const medicationRows = (conf.medications || [])
+  .map((med, index) => `
+    <tr>
+      <td colspan="2" style="padding-top:14px;">
+        <strong>Medication ${index + 1}</strong>
+      </td>
+    </tr>
 
+    <tr>
+      <td>Drug Name</td>
+      <td align="right">${badge(med.drugName ?? 0)}</td>
+    </tr>
+
+    <tr>
+      <td>Strength</td>
+      <td align="right">${badge(med.strength ?? 0)}</td>
+    </tr>
+
+    <tr>
+      <td>Quantity</td>
+      <td align="right">${badge(med.quantity ?? 0)}</td>
+    </tr>
+
+    <tr>
+      <td>Refills</td>
+      <td align="right">${badge(med.refills ?? 0)}</td>
+    </tr>
+
+    <tr>
+      <td>Directions</td>
+      <td align="right">${badge(med.directions ?? 0)}</td>
+    </tr>
+  `)
+  .join("");
   panel.innerHTML = `
     <table style="width:100%;border-collapse:collapse">
       <tr>
@@ -569,6 +602,7 @@ function renderConfidencePanel(conf) {
         <td>Prescription Date</td>
         <td align="right">${badge(conf.prescriptionDate ?? 0)}</td>
       </tr>
+      ${medicationRows}
     </table>
   `;
 }function renderAuditTrail() {
