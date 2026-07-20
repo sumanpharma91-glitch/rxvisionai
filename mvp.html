@@ -447,6 +447,7 @@ function renderMedications(medications = []) {
     }
    window.latestFieldConfidence = data.fieldConfidence || null;
 window.latestConfidenceFlags = data.confidenceFlags || [];
+   renderConfidencePanel(window.latestFieldConfidence);
 window.latestReviewNotes = data.reviewNotes || [];
    console.log("VISION FIELD CONFIDENCE:", data.fieldConfidence);
 
