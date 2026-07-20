@@ -186,6 +186,16 @@ function buildJSON(flags = []) {
     medicationsOK &&
     pharmacistOK &&
     checksOK;
+ if (
+  fullyVerified &&
+  !window.verificationLogged
+) {
+  addAuditEvent("pharmacist_verified", {
+    pharmacist: pharmacistName
+  });
+
+  window.verificationLogged = true;
+}
 
   return {
     extractionMode:
