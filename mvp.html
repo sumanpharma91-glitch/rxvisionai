@@ -581,8 +581,7 @@ applyConfidenceHighlight(
     applyConfidenceHighlight(fields[4].id || fields[4], c.directions ?? 0);
   });
 
-    document.getElementById("jsonOut").textContent =
-      JSON.stringify(data, null, 2);
+  updateJSON(data.confidenceFlags || []);
 
     setStatus("AI vision extraction complete. Pharmacist review required.", true);
 
