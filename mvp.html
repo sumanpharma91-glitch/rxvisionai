@@ -29,7 +29,8 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 <p id="status" class="small">Waiting for upload.</p>
 <label>Raw OCR Text</label>
 <textarea id="ocrText" placeholder="OCR output will appear here..."></textarea>
-</section<section class="card">
+</section>
+<section class="card">
   <h2>Original Prescription</h2>
 
   <img
@@ -65,7 +66,21 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
     <input type="checkbox" id="verifyPatient">
     Patient information verified
   </label>
-<section class="card" style="margin-top:20px;">
+ <label style="display:block;margin:8px 0;">
+    <input type="checkbox" id="verifyMedication">
+    Medication and strength verified
+  </label>
+
+  <label style="display:block;margin:8px 0;">
+    <input type="checkbox" id="verifyDirections">
+    Directions verified
+  </label>
+
+  <label style="display:block;margin:8px 0;">
+    <input type="checkbox" id="verifyPrescriber">
+    Prescriber verified
+  </label>
+</div><section class="card" style="margin-top:20px;">
   <h2>Confidence Scores</h2>
 
   <div id="confidencePanel">
@@ -82,21 +97,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
   <div id="aiReviewSummary">
     <p>Process a prescription to generate the review summary.</p>
   </div>
-</section>  <label style="display:block;margin:8px 0;">
-    <input type="checkbox" id="verifyMedication">
-    Medication and strength verified
-  </label>
-
-  <label style="display:block;margin:8px 0;">
-    <input type="checkbox" id="verifyDirections">
-    Directions verified
-  </label>
-
-  <label style="display:block;margin:8px 0;">
-    <input type="checkbox" id="verifyPrescriber">
-    Prescriber verified
-  </label>
-</div>
+</section> 
 </div><button onclick="copyJSON()">Copy JSON</button>
 <button onclick="downloadJSON()">Download JSON</button>
 <button class="secondary" onclick="clearFields()">Clear</button>
