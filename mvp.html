@@ -455,6 +455,7 @@ window.latestReviewNotes = data.reviewNotes || [];
     val("dob", data.patient?.dob);
     val("prescriber", data.prescriber);
     val("rxDate", data.prescriptionDate);
+   
    applyConfidenceHighlight(
   "patientName",
   data.fieldConfidence?.patient?.name ?? 0
@@ -624,7 +625,23 @@ const medicationRows = (conf.medications || [])
       ${medicationRows}
     </table>
   `;
-}function renderAuditTrail() {
+}
+ function applyConfidenceHighlight(elementId, score) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+
+  element.style.backgroundColor = "";
+  element.style.border = "";
+
+  if (score < 75) {
+    element.style.backgroundColor = "#fee2e2";
+    element.style.border = "2px solid #ef4444";
+  } else if (score < 90) {
+    element.style.backgroundColor = "#fef3c7";
+    element.style.border = "2px solid #f59e0b";
+  }
+}
+ function renderAuditTrail() {
   const container = document.getElementById('auditTrail');
   if (!container) return;
 
