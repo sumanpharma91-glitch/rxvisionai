@@ -1281,7 +1281,38 @@ function renderAIReviewSummary(data) {
   });
 }
  async function verifyMedicationWithHealthCanada(card) {
-    console.log("Health Canada verification started");
+  const fields = card.querySelectorAll("input, textarea");
+  const drugName = fields[0]?.value.trim();
+
+  if (!drugName) {
+    console.log("No drug name available for Health Canada verification.");
+    return;
+  }
+
+  try {
+    console.log("Checking Health Canada for:", drugName);
+
+    const response = await fetch("/api/drug-validate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        drugName: drugName
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Health Canada verification failed");
+    }
+
+    console.log("Health Canada result:", data);
+
+  } catch (error) {
+    console.error("Health Canada verification error:", error);
+  }
 }
 </script>
 </body>
