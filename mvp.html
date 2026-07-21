@@ -428,7 +428,7 @@ if (rxPreview) {
    window.latestFieldConfidence = data.fieldConfidence || null;
 window.latestConfidenceFlags = data.confidenceFlags || [];
    renderConfidencePanel(window.latestFieldConfidence);
-   renderConfidencePanel(window.latestFieldConfidence);
+   renderAIReviewSummary(data);
 window.latestReviewNotes = data.reviewNotes || [];
    renderReviewNotes(window.latestReviewNotes);
 
@@ -460,6 +460,20 @@ applyConfidenceHighlight(
     
 
     renderMedications(data.medications || []);
+   document
+  .querySelectorAll("#medicationsList .medication-card")
+  .forEach((card, index) => {
+    const c = data.fieldConfidence?.medications?.[index];
+    if (!c) return;
+
+    const fields = card.querySelectorAll("input, textarea");
+
+    applyConfidenceHighlight(fields[0].id || fields[0], c.drugName ?? 0);
+    applyConfidenceHighlight(fields[1].id || fields[1], c.strength ?? 0);
+    applyConfidenceHighlight(fields[2].id || fields[2], c.quantity ?? 0);
+    applyConfidenceHighlight(fields[3].id || fields[3], c.refills ?? 0);
+    applyConfidenceHighlight(fields[4].id || fields[4], c.directions ?? 0);
+  });
 
     document.getElementById("jsonOut").textContent =
       JSON.stringify(data, null, 2);
@@ -608,8 +622,12 @@ const medicationRows = (conf.medications || [])
     </table>
   `;
 }
- function applyConfidenceHighlight(elementId, score) {
-  const element = document.getElementById(elementId);
+ function applyConfidenceHighlight(target, score) {
+  const element =
+    typeof target === "string"
+      ? document.getElementById(target)
+      : target;
+
   if (!element) return;
 
   element.style.backgroundColor = "";
