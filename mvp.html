@@ -231,6 +231,8 @@ async function cleanWithAI() {
 
     // AI Summary
     renderAIReviewSummary(data);
+   const validationResults = validateMedications(data);
+renderValidationPanel(validationResults);
 
     // Review Notes
     renderReviewNotes(window.latestReviewNotes);
