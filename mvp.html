@@ -755,10 +755,18 @@ window.latestReviewNotes = data.reviewNotes || [];
    renderReviewNotes(window.latestReviewNotes);
 
     val("patientName", data.patient?.name);
-    val("dob", data.patient?.dob);
-    val("prescriber", data.prescriber);
-    val("rxDate", data.prescriptionDate);
-   
+val("dob", data.patient?.dob);
+val("patientAddress", data.patient?.address);
+val("patientPhone", data.patient?.phone);
+
+val("prescriber", data.prescriber?.name);
+val("clinicName", data.prescriber?.clinicName);
+val("prescriberLicense", data.prescriber?.licenseNumber);
+val("prescriberAddress", data.prescriber?.address);
+val("prescriberPhone", data.prescriber?.phone);
+val("prescriberFax", data.prescriber?.fax);
+
+val("rxDate", data.prescriptionDate);
    applyConfidenceHighlight(
   "patientName",
   data.fieldConfidence?.patient?.name ?? 0
