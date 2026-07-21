@@ -565,6 +565,7 @@ function clearFields(update = true) {
   if (update) {
     document.getElementById("jsonOut").textContent = "{}";
   }
+ addAuditEvent("fields_cleared");
 }
 function renderMedications(medications = []) {
   const container = document.getElementById('medicationsList');
