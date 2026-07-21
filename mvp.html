@@ -98,7 +98,18 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
   <div id="aiReviewSummary">
     <p>Process a prescription to generate the review summary.</p>
   </div>
-</section> 
+</section> <section class="card" style="margin-top:20px;">
+  <h2>Medication Validation</h2>
+
+  <p class="small">
+    Automated checks for missing fields, duplicate medications,
+    and unusual prescription details. Pharmacist verification is still required.
+  </p>
+
+  <div id="validationPanel">
+    <p>No validation available.</p>
+  </div>
+</section>
 </div><button onclick="copyJSON()">Copy JSON</button>
 <button onclick="downloadJSON()">Download JSON</button>
 <button class="secondary" onclick="clearFields()">Clear</button>
