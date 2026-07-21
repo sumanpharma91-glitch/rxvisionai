@@ -428,8 +428,9 @@ if (rxPreview) {
    window.latestFieldConfidence = data.fieldConfidence || null;
 window.latestConfidenceFlags = data.confidenceFlags || [];
    renderConfidencePanel(window.latestFieldConfidence);
+   renderConfidencePanel(window.latestFieldConfidence);
 window.latestReviewNotes = data.reviewNotes || [];
-   
+   renderReviewNotes(window.latestReviewNotes);
 
     val("patientName", data.patient?.name);
     val("dob", data.patient?.dob);
