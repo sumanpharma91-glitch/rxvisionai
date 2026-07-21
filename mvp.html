@@ -602,27 +602,27 @@ function renderMedications(medications = []) {
 
       <div class="field">
         <label>Drug Name</label>
-        <input value="${med.drugName || ''}">
+        <input value="${escapeHTML(med.drugName || '')}">
       </div>
 
       <div class="field">
         <label>Strength</label>
-        <input value="${med.strength || ''}">
+        <input value="${escapeHTML(med.strength || '')}">
       </div>
 
       <div class="field">
         <label>Quantity</label>
-        <input value="${med.quantity || ''}">
+        <input value="${escapeHTML(med.quantity || '')}">
       </div>
 
       <div class="field">
         <label>Refills</label>
-        <input value="${med.refills || ''}">
+        <input value="${escapeHTML(med.refills || '')}">
       </div>
 
       <div class="field">
         <label>Directions</label>
-        <textarea>${med.directions || ''}</textarea>
+        <textarea>${escapeHTML(med.directions || '')}</textarea>
       </div>
     `;
 
