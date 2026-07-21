@@ -623,6 +623,153 @@ const medicationRows = (conf.medications || [])
     element.style.border = "2px solid #f59e0b";
   }
 }
+ function renderReviewNotes(notes = []) {
+  const list = document.getElementById("reviewNotesList");
+
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (notes.length === 0) {
+    list.innerHTML = "<li>No review notes.</li>";
+    return;
+  }
+
+  notes.forEach(note => {
+    const li = document.createElement("li");
+    li.textContent = note;
+    list.appendChild(li);
+  });
+}
+function renderAIReviewSummary(data) {
+  const panel = document.getElementById("aiReviewSummary");
+
+  if (!panel) return;
+
+  if (!data) {
+    panel.innerHTML =
+      "<p>Process a prescription to generate the review summary.</p>";
+    return;
+  }
+
+  const items = [];
+  const confidence = data.fieldConfidence || {};
+
+  function add(type, message) {
+    items.push({ type, message });
+  }
+
+  function checkField(name, value, score) {
+    if (!value) {
+      add("error", `${name} is missing.`);
+      return;
+    }
+
+    if (typeof score === "number") {
+      if (score < 75) {
+        add("error", `${name} has low confidence (${score}%).`);
+      } else if (score < 90) {
+        add("warning", `${name} should be reviewed (${score}% confidence).`);
+      }
+    }
+  }
+
+  // Patient
+  checkField(
+    "Patient Name",
+    data.patient?.name,
+    confidence.patient?.name
+  );
+
+  checkField(
+    "Date of Birth",
+    data.patient?.dob,
+    confidence.patient?.dob
+  );
+
+  // Prescriber
+  checkField(
+    "Prescriber",
+    data.prescriber,
+    confidence.prescriber
+  );
+
+  // Prescription Date
+  checkField(
+    "Prescription Date",
+    data.prescriptionDate,
+    confidence.prescriptionDate
+  );
+
+  // Medications
+  (data.medications || []).forEach((med, index) => {
+    const c = confidence.medications?.[index] || {};
+
+    checkField(
+      `Medication ${index + 1} Drug`,
+      med.drugName,
+      c.drugName
+    );
+
+    checkField(
+      `Medication ${index + 1} Strength`,
+      med.strength,
+      c.strength
+    );
+
+    checkField(
+      `Medication ${index + 1} Directions`,
+      med.directions,
+      c.directions
+    );
+  });
+
+  // Confidence Flags
+  (data.confidenceFlags || []).forEach(flag => {
+    add("warning", flag);
+  });
+
+  // Review Notes
+  (data.reviewNotes || []).forEach(note => {
+    add("info", note);
+  });
+
+  if (items.length === 0) {
+    add(
+      "success",
+      "Extraction completed successfully. No missing fields or low-confidence items detected. Pharmacist verification is still required."
+    );
+  }
+
+  const colors = {
+    success: "#dcfce7",
+    info: "#dbeafe",
+    warning: "#fef3c7",
+    error: "#fee2e2"
+  };
+
+  const icons = {
+    success: "✅",
+    info: "ℹ️",
+    warning: "⚠️",
+    error: "❌"
+  };
+
+  panel.innerHTML = items
+    .map(item => `
+      <div style="
+        background:${colors[item.type]};
+        border-radius:8px;
+        padding:10px;
+        margin-bottom:8px;
+        border:1px solid #ddd;
+      ">
+        <strong>${icons[item.type]}</strong>
+        ${item.message}
+      </div>
+    `)
+    .join("");
+}
  function renderAuditTrail() {
   const container = document.getElementById('auditTrail');
   if (!container) return;
