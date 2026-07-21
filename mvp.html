@@ -664,6 +664,9 @@ if (rxPreview) {
 window.latestConfidenceFlags = data.confidenceFlags || [];
    renderConfidencePanel(window.latestFieldConfidence);
    renderAIReviewSummary(data);
+   const validationResults = validateMedications(data);
+renderValidationPanel(validationResults);
+
 window.latestReviewNotes = data.reviewNotes || [];
    renderReviewNotes(window.latestReviewNotes);
 
