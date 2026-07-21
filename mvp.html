@@ -47,12 +47,66 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 </section>
 <section class="card">
 <h2>2. Pharmacist Review Fields</h2>
-<div class="field"><label>Patient Name</label><input id="patientName"></div>
-<div class="field"><label>DOB</label><input id="dob"></div>
+<h3>Patient Information</h3>
+
+<div class="field">
+  <label>Patient Name</label>
+  <input id="patientName">
+</div>
+
+<div class="field">
+  <label>Date of Birth</label>
+  <input id="dob">
+</div>
+
+<div class="field">
+  <label>Patient Address</label>
+  <textarea id="patientAddress" style="min-height:70px;"></textarea>
+</div>
+
+<div class="field">
+  <label>Patient Phone Number</label>
+  <input id="patientPhone">
+</div>
+
 <h3>Medications Found</h3>
 <div id="medicationsList"></div>
-<div class="field"><label>Prescriber</label><input id="prescriber"></div>
-<div class="field"><label>Prescription Date</label><input id="rxDate"></div>
+<h3>Prescriber Information</h3>
+
+<div class="field">
+  <label>Doctor / Prescriber Name</label>
+  <input id="prescriber">
+</div>
+
+<div class="field">
+  <label>Clinic Name</label>
+  <input id="clinicName">
+</div>
+
+<div class="field">
+  <label>Doctor Licence Number</label>
+  <input id="prescriberLicense">
+</div>
+
+<div class="field">
+  <label>Doctor Address</label>
+  <textarea id="prescriberAddress" style="min-height:70px;"></textarea>
+</div>
+
+<div class="field">
+  <label>Doctor Phone Number</label>
+  <input id="prescriberPhone">
+</div>
+
+<div class="field">
+  <label>Doctor Fax Number</label>
+  <input id="prescriberFax">
+</div>
+
+<div class="field">
+  <label>Prescription Date</label>
+  <input id="rxDate">
+</div>
 <div class="field">
   <label>Review Notes</label>
   <ul id="reviewNotesList"></ul>
