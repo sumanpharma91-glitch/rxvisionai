@@ -449,7 +449,123 @@ function downloadJSON() {
 
   URL.revokeObjectURL(url);
 }
-function clearFields(update=true){['patientName','dob','drugName','strength','quantity','refills','directions','prescriber','rxDate'].forEach(id=>val(id,'')); if(update) updateJSON();}
+function clearFields(update = true) {
+  // Clear patient and prescription fields
+  val("patientName", "");
+  val("dob", "");
+  val("prescriber", "");
+  val("rxDate", "");
+
+  // Clear OCR text
+  const ocrText = document.getElementById("ocrText");
+  if (ocrText) {
+    ocrText.value = "";
+  }
+
+  // Remove medication cards
+  const medicationsList = document.getElementById("medicationsList");
+  if (medicationsList) {
+    medicationsList.innerHTML = "";
+  }
+
+  // Clear pharmacist information
+  const pharmacistName = document.getElementById("pharmacistName");
+  if (pharmacistName) {
+    pharmacistName.value = "";
+  }
+
+  // Reset verification checkboxes
+  [
+    "verifyPatient",
+    "verifyMedication",
+    "verifyDirections",
+    "verifyPrescriber"
+  ].forEach(id => {
+    const checkbox = document.getElementById(id);
+
+    if (checkbox) {
+      checkbox.checked = false;
+    }
+  });
+
+  // Reset uploaded image preview
+  if (preview) {
+    preview.src = "";
+    preview.style.display = "none";
+  }
+
+  // Reset original prescription preview
+  const rxPreview = document.getElementById("rxPreview");
+
+  if (rxPreview) {
+    rxPreview.src = "";
+    rxPreview.style.display = "none";
+  }
+
+  // Reset file input
+  if (imageInput) {
+    imageInput.value = "";
+  }
+
+  // Reset confidence panel
+  const confidencePanel = document.getElementById("confidencePanel");
+
+  if (confidencePanel) {
+    confidencePanel.innerHTML =
+      "<p>No confidence data available.</p>";
+  }
+
+  // Reset AI review summary
+  const aiReviewSummary =
+    document.getElementById("aiReviewSummary");
+
+  if (aiReviewSummary) {
+    aiReviewSummary.innerHTML =
+      "<p>Process a prescription to generate the review summary.</p>";
+  }
+
+  // Reset review notes
+  const reviewNotesList =
+    document.getElementById("reviewNotesList");
+
+  if (reviewNotesList) {
+    reviewNotesList.innerHTML =
+      "<li>No review notes.</li>";
+  }
+
+  // Remove confidence highlighting from core fields
+  [
+    "patientName",
+    "dob",
+    "prescriber",
+    "rxDate"
+  ].forEach(id => {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.style.backgroundColor = "";
+      element.style.border = "";
+    }
+  });
+
+  // Reset extraction data
+  window.latestFieldConfidence = null;
+  window.latestConfidenceFlags = [];
+  window.latestReviewNotes = [];
+
+  window.currentExtractionId = null;
+  window.currentCreatedAt = null;
+  window.currentVerifiedAt = null;
+  window.verificationLogged = false;
+
+  // Reset status
+  setStatus("Waiting for upload.");
+
+  // Reset displayed JSON
+  if (update) {
+    document.getElementById("jsonOut").textContent = "{}";
+  }
+}
 function renderMedications(medications = []) {
   const container = document.getElementById('medicationsList');
   if (!container) return;
