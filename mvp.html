@@ -626,8 +626,18 @@ function renderMedications(medications = []) {
         <label>Directions</label>
         <textarea>${escapeHTML(med.directions || '')}</textarea>
       </div>
-    `;
-
+<div class="health-canada-result"
+     style="
+       margin-top:15px;
+       padding:12px;
+       border-radius:8px;
+       background:#f8fafc;
+       border:1px solid #dbeafe;
+       font-size:14px;
+     ">
+  ⏳ Checking Health Canada...
+</div>
+;
     container.appendChild(card);
    verifyMedicationWithHealthCanada(card);
    card.querySelectorAll("input, textarea").forEach(field => {
@@ -1284,14 +1294,30 @@ function renderAIReviewSummary(data) {
   const fields = card.querySelectorAll("input, textarea");
   const drugName = fields[0]?.value.trim();
 
+  const resultBox = card.querySelector(".health-canada-result");
+
+  if (!resultBox) return;
+
   if (!drugName) {
-    console.log("No drug name available for Health Canada verification.");
+    resultBox.innerHTML = `
+      <strong>⚠ Health Canada verification unavailable</strong>
+      <div style="margin-top:5px;">
+        Drug name is missing.
+      </div>
+    `;
+    resultBox.style.background = "#fef3c7";
+    resultBox.style.borderColor = "#f59e0b";
     return;
   }
 
-  try {
-    console.log("Checking Health Canada for:", drugName);
+  resultBox.innerHTML = `
+    <strong>⏳ Checking Health Canada...</strong>
+    <div style="margin-top:5px;">
+      Searching for ${escapeHTML(drugName)}
+    </div>
+  `;
 
+  try {
     const response = await fetch("/api/drug-validate", {
       method: "POST",
       headers: {
@@ -1308,10 +1334,82 @@ function renderAIReviewSummary(data) {
       throw new Error(data.error || "Health Canada verification failed");
     }
 
-    console.log("Health Canada result:", data);
+    if (!data.recognized || !Array.isArray(data.products) || data.products.length === 0) {
+      resultBox.innerHTML = `
+        <strong>⚠ No Health Canada match found</strong>
+        <div style="margin-top:6px;">
+          Searched: ${escapeHTML(drugName)}
+        </div>
+        <div style="margin-top:4px;">
+          Pharmacist review required.
+        </div>
+      `;
+
+      resultBox.style.background = "#fef3c7";
+      resultBox.style.borderColor = "#f59e0b";
+      return;
+    }
+
+    const firstProduct = data.products[0] || {};
+    const firstIngredient = data.ingredients?.[0] || {};
+
+    resultBox.innerHTML = `
+      <strong>✅ Health Canada match found</strong>
+
+      <div style="margin-top:8px;">
+        <strong>Product:</strong>
+        ${escapeHTML(
+          firstProduct.brand_name ||
+          firstProduct.product_name ||
+          firstProduct.drug_name ||
+          drugName
+        )}
+      </div>
+
+      <div style="margin-top:4px;">
+        <strong>DIN:</strong>
+        ${escapeHTML(
+          firstProduct.drug_identification_number ||
+          firstProduct.din ||
+          "Not available"
+        )}
+      </div>
+
+      <div style="margin-top:4px;">
+        <strong>Ingredient:</strong>
+        ${escapeHTML(
+          firstIngredient.ingredient_name ||
+          firstIngredient.active_ingredient_name ||
+          "Not available"
+        )}
+      </div>
+
+      <div style="margin-top:4px;">
+        <strong>Matches:</strong>
+        ${data.products.length}
+      </div>
+
+      <div style="margin-top:4px;">
+        <strong>Source:</strong>
+        Health Canada DPD
+      </div>
+    `;
+
+    resultBox.style.background = "#dcfce7";
+    resultBox.style.borderColor = "#22c55e";
 
   } catch (error) {
     console.error("Health Canada verification error:", error);
+
+    resultBox.innerHTML = `
+      <strong>❌ Health Canada verification failed</strong>
+      <div style="margin-top:5px;">
+        ${escapeHTML(error.message)}
+      </div>
+    `;
+
+    resultBox.style.background = "#fee2e2";
+    resultBox.style.borderColor = "#ef4444";
   }
 }
 </script>
