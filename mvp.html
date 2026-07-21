@@ -629,6 +629,7 @@ function renderMedications(medications = []) {
     `;
 
     container.appendChild(card);
+   verifyMedicationWithHealthCanada(card);
    card.querySelectorAll("input, textarea").forEach(field => {
   field.addEventListener("input", () => {
     updateJSON();
