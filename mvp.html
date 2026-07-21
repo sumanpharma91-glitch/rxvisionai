@@ -29,6 +29,20 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f6f9fc;color:#102033;mar
 <p id="status" class="small">Waiting for upload.</p>
 <label>Raw OCR Text</label>
 <textarea id="ocrText" placeholder="OCR output will appear here..."></textarea>
+</section<section class="card">
+  <h2>Original Prescription</h2>
+
+  <img
+    id="rxPreview"
+    style="
+      width:100%;
+      max-height:700px;
+      object-fit:contain;
+      border:1px solid #ddd;
+      border-radius:8px;
+    "
+    alt="Prescription Preview"
+  >
 </section>
 <section class="card">
 <h2>2. Pharmacist Review Fields</h2>
@@ -431,6 +445,12 @@ function renderMedications(medications = []) {
 
       reader.readAsDataURL(file);
     });
+   const rxPreview = document.getElementById("rxPreview");
+
+if (rxPreview) {
+  rxPreview.src = imageBase64;
+  rxPreview.style.display = "block";
+}
 
     const res = await fetch("/api/vision-extract", {
       method: "POST",
