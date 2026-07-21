@@ -573,7 +573,9 @@ if (validationPanel) {
   window.latestFieldConfidence = null;
   window.latestConfidenceFlags = [];
   window.latestReviewNotes = [];
-addAuditEvent("fields_cleared");
+if (update) {
+  addAuditEvent("fields_cleared");
+}
   window.currentExtractionId = null;
   window.currentCreatedAt = null;
   window.currentVerifiedAt = null;
