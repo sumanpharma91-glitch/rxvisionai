@@ -809,22 +809,22 @@ function renderConfidencePanel(conf) {
   }
 
   function badge(score) {
-    let color = "#22c55e"; // High
+  let color = "#22c55e"; // High
 
-    if (score < 90) color = "#f59e0b"; // Medium
-    if (score < 75) color = "#ef4444"; // Low
+  if (score < 90) color = "#f59e0b"; // Medium
+  if (score < 75) color = "#ef4444"; // Low
 
-    return `<span style="
-      display:inline-block;
-      min-width:50px;
-      text-align:center;
-      padding:2px 8px;
-      border-radius:12px;
-      color:white;
-      background:${color};
-      font-weight:bold;
-    ">${score}%</span>`;
-  }
+  return `<span style="
+    display:inline-block;
+    min-width:50px;
+    text-align:center;
+    padding:2px 8px;
+    border-radius:12px;
+    color:white;
+    background:${color};
+    font-weight:bold;
+  ">${score}%</span>`;
+}
 const medicationRows = (conf.medications || [])
   .map((med, index) => `
     <tr>
