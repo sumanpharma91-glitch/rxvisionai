@@ -310,44 +310,7 @@ function buildJSON(flags = []) {
       'Prototype only. Verify every field against the original prescription before use.'
   };
 }  
- function renderMedications(meds = []) {
-  const list = document.getElementById('medicationsList');
-  list.innerHTML = '';
-
-  if (!meds.length) {
-    list.innerHTML = '<p>No medications found.</p>';
-    return;
-  }
-
-  meds.forEach((med, index) => {
-    const card = document.createElement('div');
-    card.className = 'medication-card';
-    card.style.cssText =
-      'border:1px solid #ddd;padding:15px;margin-bottom:15px;border-radius:10px;';
-
-    card.innerHTML = `
-      <h4>Medication ${index + 1}</h4>
-
-      <label>Drug Name</label>
-      <input class="med-drugName" value="${med.drugName || ''}">
-
-      <label>Strength</label>
-      <input class="med-strength" value="${med.strength || ''}">
-
-      <label>Quantity</label>
-      <input class="med-quantity" value="${med.quantity || ''}">
-
-      <label>Refills</label>
-      <input class="med-refills" value="${med.refills || ''}">
-
-      <label>Directions</label>
-      <textarea class="med-directions">${med.directions || ''}</textarea>
-    `;
-
-    list.appendChild(card);
-  });
-}
-function updateJSON(flags=[]){document.getElementById('jsonOut').textContent=JSON.stringify(buildJSON(flags),null,2);} document.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',()=>updateJSON()));
+ function updateJSON(flags=[]){document.getElementById('jsonOut').textContent=JSON.stringify(buildJSON(flags),null,2);} document.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',()=>updateJSON()));
 async function copyJSON() {
   const data = buildJSON();
 
