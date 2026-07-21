@@ -627,6 +627,15 @@ function renderMedications(medications = []) {
     `;
 
     container.appendChild(card);
+   card.querySelectorAll("input, textarea").forEach(field => {
+  field.addEventListener("input", () => {
+    updateJSON();
+
+    const currentData = buildJSON();
+    const validationResults = validateMedications(currentData);
+    renderValidationPanel(validationResults);
+  });
+});
   });
 }
   async function analyzeImageWithAI() {
