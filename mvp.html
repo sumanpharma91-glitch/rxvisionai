@@ -854,6 +854,209 @@ const medicationRows = (conf.medications || [])
     </table>
   `;
 }
+ function validateMedications(data) {
+  const results = [];
+  const medications = data?.medications || [];
+
+  function add(type, message) {
+    results.push({
+      type,
+      message
+    });
+  }
+
+  if (medications.length === 0) {
+    add("error", "No medications were detected.");
+    return results;
+  }
+
+  const drugNameCounts = {};
+
+  medications.forEach((med, index) => {
+    const number = index + 1;
+
+    const drugName = String(med?.drugName || "").trim();
+    const strength = String(med?.strength || "").trim();
+    const quantity = String(med?.quantity || "").trim();
+    const refills = String(med?.refills || "").trim();
+    const directions = String(med?.directions || "").trim();
+
+    if (!drugName) {
+      add("error", `Medication ${number}: Drug name is missing.`);
+    } else {
+      add("success", `Medication ${number}: ${drugName} detected.`);
+
+      const normalizedDrugName = drugName
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+      drugNameCounts[normalizedDrugName] =
+        (drugNameCounts[normalizedDrugName] || 0) + 1;
+    }
+
+    if (!strength) {
+      add("warning", `Medication ${number}: Strength is missing.`);
+    } else if (!looksLikeValidStrength(strength)) {
+      add(
+        "warning",
+        `Medication ${number}: Strength format "${strength}" should be reviewed.`
+      );
+    }
+
+    if (!quantity) {
+      add("warning", `Medication ${number}: Quantity is missing.`);
+    } else if (!looksLikeValidQuantity(quantity)) {
+      add(
+        "warning",
+        `Medication ${number}: Quantity "${quantity}" should be reviewed.`
+      );
+    }
+
+    if (!directions) {
+      add("error", `Medication ${number}: Directions are missing.`);
+    } else {
+      if (directions.length < 5) {
+        add(
+          "warning",
+          `Medication ${number}: Directions appear incomplete.`
+        );
+      }
+
+      if (!containsRoute(directions)) {
+        add(
+          "warning",
+          `Medication ${number}: Route may be missing from directions.`
+        );
+      }
+
+      if (!containsFrequency(directions)) {
+        add(
+          "warning",
+          `Medication ${number}: Frequency may be missing from directions.`
+        );
+      }
+    }
+
+    if (refills && !looksLikeValidRefills(refills)) {
+      add(
+        "warning",
+        `Medication ${number}: Refills value "${refills}" should be reviewed.`
+      );
+    }
+  });
+
+  Object.entries(drugNameCounts).forEach(([normalizedName, count]) => {
+    if (normalizedName && count > 1) {
+      add(
+        "warning",
+        `Possible duplicate medication detected: the same drug appears ${count} times.`
+      );
+    }
+  });
+
+  if (!results.some(item => item.type === "error" || item.type === "warning")) {
+    add(
+      "success",
+      "No basic medication validation issues were detected."
+    );
+  }
+
+  return results;
+}
+
+function looksLikeValidStrength(value) {
+  return /\d+(?:\.\d+)?\s*(mg|mcg|g|kg|ml|mL|units?|unit|%|meq|mEq|mmol|iu|IU)\b/i.test(
+    value
+  );
+}
+
+function looksLikeValidQuantity(value) {
+  const normalized = value.trim();
+
+  return (
+    /^\d+(?:\.\d+)?$/.test(normalized) ||
+    /^\d+(?:\.\d+)?\s*(tabs?|tablets?|caps?|capsules?|ml|mL|grams?|g|units?|patches?|inhalers?|vials?|ampoules?|bottles?)$/i.test(
+      normalized
+    )
+  );
+}
+
+function looksLikeValidRefills(value) {
+  return /^\d+$/.test(value.trim()) ||
+    /^(none|nil|zero|prn)$/i.test(value.trim());
+}
+
+function containsRoute(directions) {
+  return /\b(po|oral|orally|iv|intravenous|im|intramuscular|sc|subcut|subcutaneous|sl|sublingual|topical|topically|rectal|vaginal|inhaled|inhalation|ophthalmic|otic|nasal)\b/i.test(
+    directions
+  );
+}
+
+function containsFrequency(directions) {
+  return /\b(once daily|daily|bid|tid|qid|q\d+h|every\s+\d+\s*(hour|hours|hr|hrs)|weekly|monthly|at bedtime|hs|prn|as needed|morning|evening)\b/i.test(
+    directions
+  );
+}
+
+function renderValidationPanel(results = []) {
+  const panel = document.getElementById("validationPanel");
+
+  if (!panel) return;
+
+  if (!Array.isArray(results) || results.length === 0) {
+    panel.innerHTML = "<p>No validation available.</p>";
+    return;
+  }
+
+  const colors = {
+    success: "#dcfce7",
+    info: "#dbeafe",
+    warning: "#fef3c7",
+    error: "#fee2e2"
+  };
+
+  const borders = {
+    success: "#22c55e",
+    info: "#3b82f6",
+    warning: "#f59e0b",
+    error: "#ef4444"
+  };
+
+  const icons = {
+    success: "✅",
+    info: "ℹ️",
+    warning: "⚠️",
+    error: "❌"
+  };
+
+  panel.innerHTML = results
+    .map(item => {
+      const type = colors[item.type] ? item.type : "info";
+
+      return `
+        <div style="
+          background:${colors[type]};
+          border-left:5px solid ${borders[type]};
+          border-radius:8px;
+          padding:10px;
+          margin-bottom:8px;
+        ">
+          <strong>${icons[type]}</strong>
+          ${escapeHTML(item.message)}
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
  function applyConfidenceHighlight(target, score) {
   const element =
     typeof target === "string"
