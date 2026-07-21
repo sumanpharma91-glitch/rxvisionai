@@ -70,9 +70,12 @@ Return JSON only using exactly this structure:
 
 {
   "patient": {
-    "name": null,
-    "dob": null
+    "name": "",
+    "dob": "",
+    "address": "",
+    "phone": ""
   },
+
   "medications": [
     {
       "drugName": null,
@@ -82,13 +85,15 @@ Return JSON only using exactly this structure:
       "directions": null
     }
   ],
-  "prescriber": null,
-  "prescriptionDate": null,
-  "fieldConfidence": {
-    "patient": {
-      "name": 0,
-      "dob": 0
-    },
+  "prescriber": {
+    "name": "",
+    "clinicName": "",
+    "licenseNumber": "",
+    "address": "",
+    "phone": "",
+    "fax": ""
+  },
+
     "medications": [
       {
         "drugName": 0,
