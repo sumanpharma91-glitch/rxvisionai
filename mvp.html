@@ -172,8 +172,11 @@ function val(id, v) {
   return el.value;
 }
 function quickLocalExtract(text){clearFields(false); const t=text.replace(/\s+/g,' ').trim(); const qty=t.match(/(?:qty|quantity|dispense|#)\s*[:#-]?\s*(\d+)/i); if(qty) val('quantity',qty[1]); const strength=t.match(/(\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|units?))/i); if(strength) val('strength',strength[1]); const date=t.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{2,4})/); if(date) val('rxDate',date[1]); updateJSON();}
-async function cleanWithAI(){const text=document.getElementById('ocrText').value.trim();if(!text){alert('Run OCR first or paste OCR text.');return;}setStatus('Sending OCR text to secure AI extraction...');const res=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ocrText:text})});const data=await res.json(); window.latestFieldConfidence = data.fieldConfidence || null; console.log("API RESPONSE:", data);
-console.log("FIELD CONFIDENCE:", data.fieldConfidence);window.latestFieldConfidence = data.fieldConfidence || null;renderMedications(data.medications || []);if(!res.ok){throw new Error(data.error||'AI extraction failed');}window.latestReviewNotes=data.reviewNotes||[];val('patientName',data.patient?.name);val('dob',data.patient?.dob);val('prescriber',data.prescriber);val('rxDate',data.prescriptionDate);renderMedications(data.medications||[]);updateJSON(data.confidenceFlags||[]);setStatus('AI extraction complete. Pharmacist review still required.',true);}
+async function cleanWithAI()
+{const text=document.getElementById('ocrText').value.trim();if(!text){alert('Run OCR first or paste OCR text.');return;}setStatus('Sending OCR text to secure AI extraction...');const res=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ocrText:text})});const data=await res.json(); 
+ window.latestFieldConfidence = data.fieldConfidence || null; console.log("API RESPONSE:", data);
+console.log("FIELD CONFIDENCE:", data.fieldConfidence);if(!res.ok){throw new Error(data.error||'AI extraction failed');}
+ window.latestReviewNotes=data.reviewNotes||[];val('patientName',data.patient?.name);val('dob',data.patient?.dob);val('prescriber',data.prescriber);val('rxDate',data.prescriptionDate);renderMedications(data.medications||[]);updateJSON(data.confidenceFlags||[]);setStatus('AI extraction complete. Pharmacist review still required.',true);}
 function buildJSON(flags = []) {
   const meds = [
     ...document.querySelectorAll('#medicationsList .medication-card')
@@ -224,7 +227,8 @@ function buildJSON(flags = []) {
   !window.verificationLogged
 ) {
   addAuditEvent("pharmacist_verified", {
-    pharmacist: pharmacistName
+    pharmacist:
+  document.getElementById("pharmacistName")?.value.trim() || null
   });
 
   window.verificationLogged = true;
@@ -279,33 +283,16 @@ function buildJSON(flags = []) {
         !!document.getElementById('verifyPrescriber')?.checked
     },
 
-    verificationStatus:
-  val('patientName') &&
-  val('dob') &&
-  val('prescriber') &&
-  meds.length > 0 &&
-  meds.every(m => m.drugName && m.strength && m.directions) &&
-  document.getElementById('pharmacistName')?.value.trim() &&
-  document.getElementById('verifyPatient')?.checked &&
-  document.getElementById('verifyMedication')?.checked &&
-  document.getElementById('verifyDirections')?.checked &&
-  document.getElementById('verifyPrescriber')?.checked
-    ? 'pharmacist_verified'
-    : 'requires_pharmacist_review',
+verificationStatus: fullyVerified
+  ? "pharmacist_verified"
+  : "requires_pharmacist_review",
 
-    verifiedAt:
-  val('patientName') &&
-  val('dob') &&
-  val('prescriber') &&
-  meds.length > 0 &&
-  meds.every(m => m.drugName && m.strength && m.directions) &&
-  document.getElementById('pharmacistName')?.value.trim() &&
-  document.getElementById('verifyPatient')?.checked &&
-  document.getElementById('verifyMedication')?.checked &&
-  document.getElementById('verifyDirections')?.checked &&
-  document.getElementById('verifyPrescriber')?.checked
-    ? (window.currentVerifiedAt || (window.currentVerifiedAt = new Date().toISOString()))
-    : null,
+verifiedAt: fullyVerified
+  ? (
+      window.currentVerifiedAt ||
+      (window.currentVerifiedAt = new Date().toISOString())
+    )
+  : null,
     safetyNote:
       'Prototype only. Verify every field against the original prescription before use.'
   };
@@ -496,25 +483,26 @@ applyConfidenceHighlight(
    addAuditEvent('extraction_started', {
   mode: mode
 });
-   addAuditEvent('extraction_completed', {
-  mode: mode
-});
-
+  
   document.getElementById('pharmacistName').value = '';
   document.getElementById('verifyPatient').checked = false;
   document.getElementById('verifyMedication').checked = false;
   document.getElementById('verifyDirections').checked = false;
   document.getElementById('verifyPrescriber').checked = false;
 
-  if (mode === 'current') {
-    await analyzeImageWithAI();
-  } else {
-    const ocrSuccess = await runOCR();
+  if (mode === "current") {
+  await analyzeImageWithAI();
+} else {
+  const ocrSuccess = await runOCR();
 
-    if (ocrSuccess) {
-      await cleanWithAI();
-    }
-  }
+  if (!ocrSuccess) return;
+
+  await cleanWithAI();
+}
+
+addAuditEvent("extraction_completed", {
+  mode: mode
+});
 }
  window.auditEvents = window.auditEvents || [];
 
