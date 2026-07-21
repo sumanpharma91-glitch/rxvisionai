@@ -552,7 +552,7 @@ function clearFields(update = true) {
   window.latestFieldConfidence = null;
   window.latestConfidenceFlags = [];
   window.latestReviewNotes = [];
-
+addAuditEvent("fields_cleared");
   window.currentExtractionId = null;
   window.currentCreatedAt = null;
   window.currentVerifiedAt = null;
@@ -565,7 +565,6 @@ function clearFields(update = true) {
   if (update) {
     document.getElementById("jsonOut").textContent = "{}";
   }
- addAuditEvent("fields_cleared");
 }
 function renderMedications(medications = []) {
   const container = document.getElementById('medicationsList');
