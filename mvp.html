@@ -1329,6 +1329,7 @@ function renderAIReviewSummary(data) {
     });
 
     const data = await response.json();
+   console.log("Full Health Canada response:", data);
 
     if (!response.ok) {
       throw new Error(data.error || "Health Canada verification failed");
