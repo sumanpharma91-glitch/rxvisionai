@@ -536,6 +536,14 @@ function clearFields(update = true) {
     aiReviewSummary.innerHTML =
       "<p>Process a prescription to generate the review summary.</p>";
   }
+ // Reset medication validation
+const validationPanel =
+  document.getElementById("validationPanel");
+
+if (validationPanel) {
+  validationPanel.innerHTML =
+    "<p>No validation available.</p>";
+}
 
   // Reset review notes
   const reviewNotesList =
