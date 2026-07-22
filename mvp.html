@@ -311,10 +311,9 @@ renderValidationPanel(validationResults);
     );
 
     applyConfidenceHighlight(
-      "prescriber",
-      data.fieldConfidence?.prescriber ?? 0
-    );
-
+  "prescriber",
+  data.fieldConfidence?.prescriber?.name ?? 0
+);
     applyConfidenceHighlight(
       "rxDate",
       data.fieldConfidence?.prescriptionDate ?? 0
