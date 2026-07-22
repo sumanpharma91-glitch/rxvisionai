@@ -720,6 +720,10 @@ let validationTimer;
 
 card.querySelectorAll("input, textarea").forEach(field => {
   field.addEventListener("input", () => {
+
+    // Clear the previous Health Canada result
+    card.healthCanadaResult = null;
+
     updateJSON();
 
     const currentData = buildJSON();
