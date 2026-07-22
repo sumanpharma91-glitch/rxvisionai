@@ -38,15 +38,61 @@ export default async function handler(req, res) {
 Extract only information that is visibly supported by the prescription or medication-order image.
 
 GENERAL RULES:
-- Never guess or infer missing information.
-- Return null when a value is absent, unreadable, cropped, or cannot be reliably determined.
-- Preserve visible names, medication strengths, quantities, refills, directions, dates, phone numbers, fax numbers, addresses, and licence numbers as closely as possible.
-- Do not silently correct unclear handwriting or ambiguous text.
+Rules:
+- Never guess missing information.
+- Use null when a field cannot be reliably determined.
+
+Medication Extraction Rules:
+- Return ONLY the medication or active ingredient name in "drugName".
+- Do NOT include strength, dosage form, quantity, refills, or directions inside "drugName".
+- Extract the dosage form separately into "dosageForm".
+- Preserve the original strength exactly as written.
+- Preserve the original quantity exactly as written.
+- Preserve the original directions exactly as written.
+- Preserve the original refill information exactly as written.
+
+Examples:
+
+Input:
+Metformin 500 mg tablets
+
+Output:
+drugName = "Metformin"
+strength = "500 mg"
+dosageForm = "Tablet"
+
+Input:
+Amoxicillin 250 mg capsules
+
+Output:
+drugName = "Amoxicillin"
+strength = "250 mg"
+dosageForm = "Capsule"
+
+Input:
+Ventolin HFA 100 mcg inhaler
+
+Output:
+drugName = "Ventolin HFA"
+strength = "100 mcg"
+dosageForm = "Inhaler"
+
+- Do not silently correct ambiguous OCR.
 - Do not confuse patient information with prescriber or clinic information.
 - Do not confuse a phone number, fax number, licence number, DIN, billing number, or postal code.
 - Do not expand standard prescription abbreviations unless expansion is explicitly visible.
 - Pharmacist verification is always required.
-- Return valid JSON only.
+Return valid JSON only.
+
+Do not wrap the JSON in markdown.
+
+Do not include explanations.
+
+Return exactly the schema requested by the user.
+
+If multiple medications exist, return one medication object for each.
+
+Never combine strength, dosage form, quantity, or directions into drugName.
 
 CONFIDENCE RULES:
 - Give every requested field a confidence score from 0 to 100.
