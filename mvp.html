@@ -832,11 +832,12 @@ applyConfidenceHighlight(
 
     const fields = card.querySelectorAll("input, textarea");
 
-    applyConfidenceHighlight(fields[0].id || fields[0], c.drugName ?? 0);
-    applyConfidenceHighlight(fields[1].id || fields[1], c.strength ?? 0);
-    applyConfidenceHighlight(fields[2].id || fields[2], c.quantity ?? 0);
-    applyConfidenceHighlight(fields[3].id || fields[3], c.refills ?? 0);
-    applyConfidenceHighlight(fields[4].id || fields[4], c.directions ?? 0);
+    applyConfidenceHighlight(fields[0], c.drugName ?? 0);
+applyConfidenceHighlight(fields[1], c.strength ?? 0);
+applyConfidenceHighlight(fields[2], c.dosageForm ?? 95);
+applyConfidenceHighlight(fields[3], c.quantity ?? 0);
+applyConfidenceHighlight(fields[4], c.refills ?? 0);
+applyConfidenceHighlight(fields[5], c.directions ?? 0);
   });
 
   updateJSON(data.confidenceFlags || []);
