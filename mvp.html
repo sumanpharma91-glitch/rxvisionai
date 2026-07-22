@@ -1377,7 +1377,12 @@ function renderAIReviewSummary(data) {
  async function verifyMedicationWithHealthCanada(card) {
   const fields = card.querySelectorAll("input, textarea");
 
-const drugName = fields[0]?.value.trim() || "";
+const rawDrug = fields[0]?.value.trim() || "";
+
+const drugName = rawDrug
+  .replace(/\b\d+(\.\d+)?\s*(mg|mcg|g|ml|mL|units?|meq|mmol)\b/gi, "")
+  .replace(/\b(tablets?|tabs?|capsules?|caps?|solution|suspension|cream|ointment|patch)\b/gi, "")
+  .trim();
 const strength = fields[1]?.value.trim() || "";
 const directions = fields[4]?.value.trim() || "";
   const resultBox = card.querySelector(".health-canada-result");
