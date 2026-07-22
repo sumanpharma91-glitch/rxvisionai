@@ -427,17 +427,24 @@ function buildJSON(flags = []) {
       (window.currentCreatedAt = new Date().toISOString()),
 
     patient: {
-      name: val('patientName') || null,
-      dob: val('dob') || null
-    },
+    name: val("patientName") || null,
+    dob: val("dob") || null,
+    address: val("patientAddress") || null,
+    phone: val("patientPhone") || null
+},
 
-    medications: meds,
+medications: meds,
 
-    prescriber:
-      val('prescriber') || null,
+prescriber: {
+    name: val("prescriber") || null,
+    clinicName: val("clinicName") || null,
+    licenseNumber: val("prescriberLicense") || null,
+    address: val("prescriberAddress") || null,
+    phone: val("prescriberPhone") || null,
+    fax: val("prescriberFax") || null
+},
 
-    prescriptionDate:
-      val('rxDate') || null,
+prescriptionDate: val("rxDate") || null,
 
    fieldConfidence: window.latestFieldConfidence || null,
     confidenceFlags: window.latestConfidenceFlags || [],
