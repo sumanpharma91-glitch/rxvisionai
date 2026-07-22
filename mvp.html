@@ -838,6 +838,7 @@ applyConfidenceHighlight(
     
 
     renderMedications(data.medications || []);
+   await runClinicalDecisionSupport();
    document
   .querySelectorAll("#medicationsList .medication-card")
   .forEach((card, index) => {
