@@ -1368,6 +1368,48 @@ function renderAIReviewSummary(data) {
     `)
     .join("");
 }
+ function renderClinicalDecision(result) {
+
+  const panel =
+    document.getElementById("clinicalDecisionPanel");
+
+  if (!panel) return;
+
+  if (!result) {
+    panel.innerHTML =
+      "<p>No clinical decision analysis available.</p>";
+    return;
+  }
+
+  const summary = result.summary || {};
+
+  const riskColor = {
+    low: "#22c55e",
+    moderate: "#f59e0b",
+    high: "#ef4444",
+    critical: "#7f1d1d"
+  };
+
+  panel.innerHTML = `
+    <div style="
+      padding:12px;
+      border-radius:10px;
+      background:#f8fafc;
+      border-left:6px solid ${riskColor[summary.overallRisk] || "#3b82f6"};
+      margin-bottom:15px;
+    ">
+      <strong>
+        Overall Clinical Risk:
+        ${(summary.overallRisk || "unknown").toUpperCase()}
+      </strong>
+
+      <div style="margin-top:8px;">
+        ${summary.reason || ""}
+      </div>
+    </div>
+  `;
+
+}
  function renderAuditTrail() {
   const container = document.getElementById('auditTrail');
   if (!container) return;
