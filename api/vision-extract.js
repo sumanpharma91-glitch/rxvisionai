@@ -151,6 +151,7 @@ PRESCRIPTION
 MEDICATIONS
 - Drug name
 - Strength
+- Dosage form
 - Quantity
 - Refills
 - Directions
@@ -193,13 +194,14 @@ Return JSON only using exactly this structure:
       "phone": 0
     },
     "medications": [
-      {
-        "drugName": 0,
-        "strength": 0,
-        "quantity": 0,
-        "refills": 0,
-        "directions": 0
-      }
+     {
+  "drugName": 0,
+  "strength": 0,
+  "dosageForm": 0,
+  "quantity": 0,
+  "refills": 0,
+  "directions": 0
+}
     ],
     "prescriber": {
       "name": 0,
