@@ -300,6 +300,7 @@ val("prescriberFax", data.prescriber?.fax);
 val("rxDate", data.prescriptionDate);
     // Medication cards
     renderMedications(data.medications || []);
+   await runClinicalDecisionSupport();
 
     // Confidence panel
     renderConfidencePanel(window.latestFieldConfidence);
