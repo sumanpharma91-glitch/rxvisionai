@@ -73,7 +73,17 @@ dosageForm = "Inhaler"
 - Missing quantity or refills alone should not automatically be flagged if those fields are simply not present.
 - Flag potentially ambiguous abbreviations or unclear characters for pharmacist review.
 - Pharmacist verification is always required.
-- Return JSON only.`
+Return valid JSON only.
+
+Do not wrap the JSON in markdown.
+
+Do not include explanations.
+
+Return exactly the schema requested by the user.
+
+If multiple medications exist, return one medication object for each.
+
+Never combine strength, dosage form, quantity, or directions into drugName.
 },
         {
           role: "user",
