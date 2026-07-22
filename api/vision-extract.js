@@ -265,14 +265,15 @@ Important:
     extracted.prescriptionDate = extracted.prescriptionDate ?? null;
 
     extracted.medications = Array.isArray(extracted.medications)
-      ? extracted.medications.map((medication) => ({
-          drugName: medication?.drugName ?? null,
-          strength: medication?.strength ?? null,
-          quantity: medication?.quantity ?? null,
-          refills: medication?.refills ?? null,
-          directions: medication?.directions ?? null,
-        }))
-      : [];
+  ? extracted.medications.map((medication) => ({
+      drugName: medication?.drugName ?? null,
+      strength: medication?.strength ?? null,
+      dosageForm: medication?.dosageForm ?? null,
+      quantity: medication?.quantity ?? null,
+      refills: medication?.refills ?? null,
+      directions: medication?.directions ?? null,
+    }))
+  : [];
 
     const medicationConfidence = Array.isArray(
       extracted.fieldConfidence?.medications
