@@ -363,13 +363,17 @@ function buildJSON(flags = []) {
   ].map(card => {
     const fields = card.querySelectorAll('input, textarea');
 
-    return {
-      drugName: fields[0]?.value || null,
-      strength: fields[1]?.value || null,
-      quantity: fields[2]?.value || null,
-      refills: fields[3]?.value || null,
-      directions: fields[4]?.value || null
-    };
+   return {
+  drugName: fields[0]?.value || null,
+  strength: fields[1]?.value || null,
+  dosageForm: fields[2]?.value || null,
+  quantity: fields[3]?.value || null,
+  refills: fields[4]?.value || null,
+  directions: fields[5]?.value || null,
+
+  healthCanadaValidation:
+    card.healthCanadaResult || null
+};
   });
 
   const patientOK =
