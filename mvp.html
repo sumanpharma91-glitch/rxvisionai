@@ -1367,8 +1367,10 @@ function renderAIReviewSummary(data) {
 }
  async function verifyMedicationWithHealthCanada(card) {
   const fields = card.querySelectorAll("input, textarea");
-  const drugName = fields[0]?.value.trim();
 
+const drugName = fields[0]?.value.trim() || "";
+const strength = fields[1]?.value.trim() || "";
+const directions = fields[4]?.value.trim() || "";
   const resultBox = card.querySelector(".health-canada-result");
 
   if (!resultBox) return;
