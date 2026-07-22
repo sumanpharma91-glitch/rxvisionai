@@ -331,11 +331,12 @@ renderValidationPanel(validationResults);
 
         const fields = card.querySelectorAll("input, textarea");
 
-        applyConfidenceHighlight(fields[0], confidence.drugName ?? 0);
-        applyConfidenceHighlight(fields[1], confidence.strength ?? 0);
-        applyConfidenceHighlight(fields[2], confidence.quantity ?? 0);
-        applyConfidenceHighlight(fields[3], confidence.refills ?? 0);
-        applyConfidenceHighlight(fields[4], confidence.directions ?? 0);
+       applyConfidenceHighlight(fields[0], confidence.drugName ?? 0);
+applyConfidenceHighlight(fields[1], confidence.strength ?? 0);
+applyConfidenceHighlight(fields[2], confidence.dosageForm ?? 95);
+applyConfidenceHighlight(fields[3], confidence.quantity ?? 0);
+applyConfidenceHighlight(fields[4], confidence.refills ?? 0);
+applyConfidenceHighlight(fields[5], confidence.directions ?? 0);
 
       });
 
