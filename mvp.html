@@ -667,9 +667,11 @@ if (clinicalDecisionPanel) {
   });
 
   // Reset extraction data
-  window.latestFieldConfidence = null;
-  window.latestConfidenceFlags = [];
-  window.latestReviewNotes = [];
+  // Reset extraction data
+window.latestFieldConfidence = null;
+window.latestConfidenceFlags = [];
+window.latestReviewNotes = [];
+window.latestClinicalDecision = null;
 if (update) {
   addAuditEvent("fields_cleared");
 }
