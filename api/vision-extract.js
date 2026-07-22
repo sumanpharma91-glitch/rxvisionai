@@ -51,6 +51,14 @@ Medication Extraction Rules:
 - Preserve the original directions exactly as written.
 - Preserve the original refill information exactly as written.
 
+Dosage Form Rules:
+
+- Always extract dosageForm whenever it can be determined.
+- If the prescription explicitly states Tablet, Capsule, Cream, Ointment, Inhaler, Injection, Suspension, Syrup, Patch, Drops, Solution, Powder, or Lotion, return that value.
+- If the dosage form is obvious from the medication wording (for example "Metformin tablets", "Amoxicillin capsules", "Ventolin HFA inhaler"), return the dosage form.
+- If the dosage form truly cannot be determined, return null.
+- Never include dosage form inside drugName.
+
 Examples:
 
 Input:
