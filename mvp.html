@@ -1401,8 +1401,10 @@ const directions = fields[4]?.value.trim() || "";
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        drugName: drugName
-      })
+  drugName,
+  strength,
+  directions
+})
     });
 
     const data = await response.json();
