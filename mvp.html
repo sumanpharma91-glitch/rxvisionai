@@ -1466,8 +1466,7 @@ function renderAIReviewSummary(data) {
 }
  function renderClinicalDecision(result) {
 
-  const panel =
-    document.getElementById("clinicalDecisionPanel");
+  const panel = document.getElementById("clinicalDecisionPanel");
 
   if (!panel) return;
 
@@ -1479,34 +1478,103 @@ function renderAIReviewSummary(data) {
 
   const summary = result.summary || {};
 
-  const riskColor = {
-    low: "#22c55e",
-    moderate: "#f59e0b",
-    high: "#ef4444",
-    critical: "#7f1d1d"
+  const interactions =
+    result.interactionAnalysis?.interactions || [];
+
+  const duplicateTherapy =
+    result.duplicateTherapy || [];
+
+  const highRisk =
+    result.highRiskAlerts || [];
+
+  const controlled =
+    result.controlledSubstanceAlerts || [];
+
+  const recommendations =
+    result.pharmacistRecommendations || [];
+
+  const warnings =
+    result.clinicalWarnings || [];
+
+  const colors = {
+    low:"#22c55e",
+    moderate:"#f59e0b",
+    high:"#ef4444",
+    critical:"#7f1d1d"
   };
 
   panel.innerHTML = `
-    <div style="
-      padding:12px;
-      border-radius:10px;
-      background:#f8fafc;
-      border-left:6px solid ${riskColor[summary.overallRisk] || "#3b82f6"};
-      margin-bottom:15px;
-    ">
-      <strong>
-        Overall Clinical Risk:
-        ${(summary.overallRisk || "unknown").toUpperCase()}
-      </strong>
 
-      <div style="margin-top:8px;">
-        ${summary.reason || ""}
-      </div>
-    </div>
-  `;
+<div style="
+padding:14px;
+border-radius:10px;
+margin-bottom:20px;
+background:#f8fafc;
+border-left:6px solid ${colors[summary.overallRisk] || "#3b82f6"};
+">
 
-}
- function renderAuditTrail() {
+<h3 style="margin:0;">
+Overall Clinical Risk:
+${(summary.overallRisk || "unknown").toUpperCase()}
+</h3>
+
+<p>${summary.reason || ""}</p>
+
+</div>
+
+<h3>Drug Interactions (${interactions.length})</h3>
+
+<ul>
+${interactions.map(i=>`
+<li>
+<b>${i.drugs?.join(" + ")}</b><br>
+${i.description}
+</li>
+`).join("")}
+</ul>
+
+<h3>Duplicate Therapy (${duplicateTherapy.length})</h3>
+
+<ul>
+${duplicateTherapy.map(i=>`
+<li>${i.description}</li>
+`).join("")}
+</ul>
+
+<h3>High Risk Alerts (${highRisk.length})</h3>
+
+<ul>
+${highRisk.map(i=>`
+<li>${i.description}</li>
+`).join("")}
+</ul>
+
+<h3>Controlled Substance Alerts (${controlled.length})</h3>
+
+<ul>
+${controlled.map(i=>`
+<li>${i.description}</li>
+`).join("")}
+</ul>
+
+<h3>Recommendations</h3>
+
+<ul>
+${recommendations.map(i=>`
+<li>${i}</li>
+`).join("")}
+</ul>
+
+<h3>Clinical Warnings</h3>
+
+<ul>
+${warnings.map(i=>`
+<li>${i}</li>
+`).join("")}
+</ul>
+
+`;
+}function renderAuditTrail() {
   const container = document.getElementById('auditTrail');
   if (!container) return;
 
