@@ -1430,9 +1430,12 @@ const directions = fields[5]?.value.trim() || "";
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
+     body: JSON.stringify({
   drugName,
   strength,
+  dosageForm,
+  quantity,
+  refills,
   directions
 })
     });
@@ -1461,51 +1464,102 @@ const directions = fields[5]?.value.trim() || "";
       return;
     }
 
-    const firstProduct = data.products[0] || {};
-    const firstIngredient = data.ingredients?.[0] || {};
+   const status =
+  data.matchType === "exact_strength_match"
+    ? "✅ Exact Strength Match"
+    : data.matchType === "strength_mismatch"
+    ? "⚠️ Strength Mismatch"
+    : data.matchType === "partial_match"
+    ? "⚠️ Partial Match"
+    : "🔎 Pharmacist Review Required";
 
-    resultBox.innerHTML = `
-      <strong>✅ Health Canada match found</strong>
+resultBox.innerHTML = `
+<h3 style="margin-top:0;">${status}</h3>
 
-      <div style="margin-top:8px;">
-        <strong>Product:</strong>
-        ${escapeHTML(
-          firstProduct.brand_name ||
-          firstProduct.product_name ||
-          firstProduct.drug_name ||
-          drugName
-        )}
-      </div>
+<table style="width:100%;border-collapse:collapse;font-size:14px">
 
-      <div style="margin-top:4px;">
-        <strong>DIN:</strong>
-        ${escapeHTML(
-          firstProduct.drug_identification_number ||
-          firstProduct.din ||
-          "Not available"
-        )}
-      </div>
+<tr>
+<td><strong>Drug</strong></td>
+<td>${escapeHTML(drugName)}</td>
+</tr>
 
-      <div style="margin-top:4px;">
-        <strong>Ingredient:</strong>
-        ${escapeHTML(
-          firstIngredient.ingredient_name ||
-          firstIngredient.active_ingredient_name ||
-          "Not available"
-        )}
-      </div>
+<tr>
+<td><strong>Brand</strong></td>
+<td>${escapeHTML(firstProduct.brand_name || "N/A")}</td>
+</tr>
 
-      <div style="margin-top:4px;">
-        <strong>Matches:</strong>
-        ${data.products.length}
-      </div>
+<tr>
+<td><strong>Generic</strong></td>
+<td>${escapeHTML(firstIngredient.ingredient_name || "N/A")}</td>
+</tr>
 
-      <div style="margin-top:4px;">
-        <strong>Source:</strong>
-        Health Canada DPD
-      </div>
-    `;
+<tr>
+<td><strong>DIN</strong></td>
+<td>${escapeHTML(
+firstProduct.drug_identification_number ||
+firstProduct.din ||
+"N/A"
+)}</td>
+</tr>
 
+<tr>
+<td><strong>Entered Strength</strong></td>
+<td>${escapeHTML(strength || "N/A")}</td>
+</tr>
+
+<tr>
+<td><strong>Matched Strength</strong></td>
+<td>${escapeHTML(data.bestMatch?.strength || "N/A")}</td>
+</tr>
+
+<tr>
+<td><strong>Dosage Form</strong></td>
+<td>${escapeHTML(
+data.bestMatch?.dosageForm ||
+firstProduct.dosage_form ||
+dosageForm ||
+"N/A"
+)}</td>
+</tr>
+
+<tr>
+<td><strong>Route</strong></td>
+<td>${escapeHTML(data.bestMatch?.route || "N/A")}</td>
+</tr>
+
+<tr>
+<td><strong>Available Strengths</strong></td>
+<td>${escapeHTML(
+(data.availableStrengths || []).join(", ") || "N/A"
+)}</td>
+</tr>
+
+<tr>
+<td><strong>Match Score</strong></td>
+<td>${data.overallScore ?? "N/A"}%</td>
+</tr>
+
+</table>
+
+${
+Array.isArray(data.warnings) && data.warnings.length
+? `
+<div style="
+margin-top:12px;
+padding:10px;
+background:#fff7ed;
+border-left:4px solid orange;
+border-radius:6px;
+">
+<strong>Warnings</strong>
+<ul>
+${data.warnings.map(w=>`<li>${escapeHTML(w)}</li>`).join("")}
+</ul>
+</div>
+`
+: ""
+}
+`;
     resultBox.style.background = "#dcfce7";
     resultBox.style.borderColor = "#22c55e";
 
