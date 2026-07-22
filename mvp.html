@@ -1429,6 +1429,7 @@ const directions = fields[4]?.value.trim() || "";
     });
 
     const data = await response.json();
+   card.healthCanadaResult = data;
    console.log("Full Health Canada response:", data);
 
     if (!response.ok) {
