@@ -1561,9 +1561,19 @@ ${data.warnings.map(w=>`<li>${escapeHTML(w)}</li>`).join("")}
 : ""
 }
 `;
-    resultBox.style.background = "#dcfce7";
-    resultBox.style.borderColor = "#22c55e";
-
+   if (data.matchType === "exact_strength_match") {
+  resultBox.style.background = "#dcfce7";
+  resultBox.style.borderColor = "#22c55e";
+} else if (
+  data.matchType === "strength_mismatch" ||
+  data.matchType === "partial_match"
+) {
+  resultBox.style.background = "#fef3c7";
+  resultBox.style.borderColor = "#f59e0b";
+} else {
+  resultBox.style.background = "#dbeafe";
+  resultBox.style.borderColor = "#3b82f6";
+}
   } catch (error) {
     console.error("Health Canada verification error:", error);
 
