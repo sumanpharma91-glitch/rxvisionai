@@ -946,7 +946,7 @@ const medicationRows = (conf.medications || [])
 
       <tr>
         <td>Prescriber</td>
-        <td align="right">${badge(conf.prescriber ?? 0)}</td>
+        <td align="right">${badge(conf.prescriber?.name ?? 0)}</td>
       </tr>
 
       <tr>
