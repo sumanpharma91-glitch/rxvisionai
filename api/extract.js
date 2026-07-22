@@ -28,7 +28,42 @@ Extract visible prescription and medication-order information into strict JSON.
 Rules:
 - Never guess missing information.
 - Use null when a field cannot be reliably determined.
-- Preserve medication names, strengths, quantities, refills, and directions as closely as possible to the source text.
+
+Medication Extraction Rules:
+- Return ONLY the medication or active ingredient name in "drugName".
+- Do NOT include strength, dosage form, quantity, refills, or directions inside "drugName".
+- Extract the dosage form separately into "dosageForm".
+- Preserve the original strength exactly as written.
+- Preserve the original quantity exactly as written.
+- Preserve the original directions exactly as written.
+- Preserve the original refill information exactly as written.
+
+Examples:
+
+Input:
+Metformin 500 mg tablets
+
+Output:
+drugName = "Metformin"
+strength = "500 mg"
+dosageForm = "Tablet"
+
+Input:
+Amoxicillin 250 mg capsules
+
+Output:
+drugName = "Amoxicillin"
+strength = "250 mg"
+dosageForm = "Capsule"
+
+Input:
+Ventolin HFA 100 mcg inhaler
+
+Output:
+drugName = "Ventolin HFA"
+strength = "100 mcg"
+dosageForm = "Inhaler"
+
 - Do not silently correct ambiguous OCR.
 - Add confidenceFlags only for OCR uncertainty, unreadable text, conflicting text, missing critical fields, or values that may have been misread.
 - Do not flag standard prescription abbreviations by themselves, such as PO, IV, BID, PRN, q6, or q12, unless the OCR text is unclear.
@@ -52,13 +87,14 @@ Return JSON only with this structure:
     "dob": null
   },
   "medications": [
-    {
-      "drugName": null,
-      "strength": null,
-      "quantity": null,
-      "refills": null,
-      "directions": null
-    }
+   {
+  "drugName": "Metformin",
+  "strength": "500 mg",
+  "dosageForm": "Tablet",
+  "quantity": "60 tablets",
+  "refills": "3",
+  "directions": "Take one tablet PO BID"
+}
   ],
   "prescriber": null,
   "prescriptionDate": null,
