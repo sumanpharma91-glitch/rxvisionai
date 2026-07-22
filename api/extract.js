@@ -102,26 +102,35 @@ Return JSON only with this structure:
 {
   "patient": {
     "name": null,
-    "dob": null
+    "dob": null,
+    "address": null,
+    "phone": null
   },
   "medications": [
-   {
-  "drugName": "Metformin",
-  "strength": "500 mg",
-  "dosageForm": "Tablet",
-  "quantity": "60 tablets",
-  "refills": "3",
-  "directions": "Take one tablet PO BID"
-}
+    {
+      "drugName": null,
+      "strength": null,
+      "dosageForm": null,
+      "quantity": null,
+      "refills": null,
+      "directions": null
+    }
   ],
-  "prescriber": null,
+  "prescriber": {
+    "name": null,
+    "clinicName": null,
+    "licenseNumber": null,
+    "address": null,
+    "phone": null,
+    "fax": null
+  },
   "prescriptionDate": null,
+  "fieldConfidence": {},
   "confidenceFlags": [],
-"reviewNotes": [],
-"verificationStatus": "requires_pharmacist_review",
+  "reviewNotes": [],
+  "verificationStatus": "requires_pharmacist_review",
   "safetyNote": "Prototype only. Verify every field against the original prescription before use."
-}`
-        }
+}        }
       ],
       temperature: 0
     });
