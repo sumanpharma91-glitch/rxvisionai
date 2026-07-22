@@ -453,6 +453,8 @@ function buildJSON(flags = []) {
 },
 
 medications: meds,
+   clinicalDecisionSupport:
+  window.latestClinicalDecision || null,
 
 prescriber: {
     name: val("prescriber") || null,
