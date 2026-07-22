@@ -1458,13 +1458,13 @@ const directions = fields[5]?.value.trim() || "";
           Pharmacist review required.
         </div>
       `;
-const firstProduct = data.products[0] || {};
-const firstIngredient = data.ingredients?.[0] || {};
+
       resultBox.style.background = "#fef3c7";
       resultBox.style.borderColor = "#f59e0b";
       return;
     }
-
+const firstProduct = data.products[0] || {};
+const firstIngredient = data.ingredients?.[0] || {};
    const status =
   data.matchType === "exact_strength_match"
     ? "✅ Exact Strength Match"
