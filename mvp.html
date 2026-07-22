@@ -679,7 +679,10 @@ function renderMedications(medications = []) {
         <label>Strength</label>
         <input value="${escapeHTML(med.strength || '')}">
       </div>
-
+      <div class="field">
+  <label>Dosage Form</label>
+  <input value="${escapeHTML(med.dosageForm || '')}">
+</div>
       <div class="field">
         <label>Quantity</label>
         <input value="${escapeHTML(med.quantity || '')}">
