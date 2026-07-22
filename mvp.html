@@ -708,13 +708,22 @@ function renderMedications(medications = []) {
 `;
     container.appendChild(card);
    verifyMedicationWithHealthCanada(card);
-   card.querySelectorAll("input, textarea").forEach(field => {
+
+let validationTimer;
+
+card.querySelectorAll("input, textarea").forEach(field => {
   field.addEventListener("input", () => {
     updateJSON();
 
     const currentData = buildJSON();
     const validationResults = validateMedications(currentData);
     renderValidationPanel(validationResults);
+
+    clearTimeout(validationTimer);
+
+    validationTimer = setTimeout(() => {
+      verifyMedicationWithHealthCanada(card);
+    }, 700);
   });
 });
   });
