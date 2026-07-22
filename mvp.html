@@ -862,6 +862,88 @@ applyConfidenceHighlight(fields[5], c.directions ?? 0);
     setStatus("AI vision error: " + error.message);
   }
 }
+ async function runClinicalDecisionSupport() {
+  const panel = document.getElementById("clinicalDecisionPanel");
+
+  if (!panel) return;
+
+  const data = buildJSON();
+  const medications = Array.isArray(data.medications)
+    ? data.medications.filter(med => med?.drugName)
+    : [];
+
+  if (medications.length === 0) {
+    renderClinicalDecision(null);
+    return;
+  }
+
+  panel.innerHTML = `
+    <div style="
+      padding:12px;
+      border-radius:8px;
+      background:#dbeafe;
+      border-left:5px solid #3b82f6;
+    ">
+      ⏳ Running preliminary clinical screening...
+    </div>
+  `;
+
+  try {
+    const response = await fetch("/api/clinical-decision", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        medications,
+        jurisdiction: "Canada",
+        province: "Ontario"
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        result.details ||
+        "Clinical decision screening failed"
+      );
+    }
+
+    window.latestClinicalDecision = result;
+
+    renderClinicalDecision(result);
+    updateJSON();
+
+    addAuditEvent("clinical_decision_completed", {
+      provider: result.provider || null,
+      overallRisk: result.summary?.overallRisk || null,
+      interactionCount:
+        result.interactionAnalysis?.interactions?.length || 0,
+      duplicateTherapyCount:
+        result.duplicateTherapy?.length || 0,
+      highRiskAlertCount:
+        result.highRiskAlerts?.length || 0
+    });
+  } catch (error) {
+    console.error("Clinical decision support error:", error);
+
+    panel.innerHTML = `
+      <div style="
+        padding:12px;
+        border-radius:8px;
+        background:#fee2e2;
+        border-left:5px solid #ef4444;
+      ">
+        <strong>❌ Clinical screening failed</strong>
+        <div style="margin-top:6px;">
+          ${escapeHTML(error.message)}
+        </div>
+      </div>
+    `;
+  }
+}
   async function processSelectedMode() {
   const mode = document.getElementById('extractionMode').value;
 
