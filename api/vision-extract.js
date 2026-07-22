@@ -320,13 +320,19 @@ Important:
             medication.drugName
           ),
           strength: normalizeConfidence(
-            confidence.strength,
-            medication.strength
-          ),
-          quantity: normalizeConfidence(
-            confidence.quantity,
-            medication.quantity
-          ),
+  confidence.strength,
+  medication.strength
+),
+
+dosageForm: normalizeConfidence(
+  confidence.dosageForm,
+  medication.dosageForm
+),
+
+quantity: normalizeConfidence(
+  confidence.quantity,
+  medication.quantity
+),
           refills: normalizeConfidence(
             confidence.refills,
             medication.refills
