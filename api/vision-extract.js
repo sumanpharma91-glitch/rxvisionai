@@ -20,62 +20,98 @@ export default async function handler(req, res) {
       });
     }
 
+    if (!imageBase64.startsWith("data:image/")) {
+      return res.status(400).json({
+        error: "imageBase64 must be a valid image data URL.",
+      });
+    }
+
     const response = await client.chat.completions.create({
       model: "gpt-4o",
+      temperature: 0,
+
       messages: [
         {
           role: "system",
-          content: `You are a prescription image extraction assistant.
+          content: `You are a prescription image extraction assistant for a Canadian pharmacy prototype.
 
 Extract only information that is visibly supported by the prescription or medication-order image.
 
 GENERAL RULES:
-- Never guess missing information.
-- Use null when a value cannot be reliably determined.
-- Preserve medication names, strengths, quantities, refills, and directions as closely as possible to the image.
+- Never guess or infer missing information.
+- Return null when a value is absent, unreadable, cropped, or cannot be reliably determined.
+- Preserve visible names, medication strengths, quantities, refills, directions, dates, phone numbers, fax numbers, addresses, and licence numbers as closely as possible.
 - Do not silently correct unclear handwriting or ambiguous text.
+- Do not confuse patient information with prescriber or clinic information.
+- Do not confuse a phone number, fax number, licence number, DIN, billing number, or postal code.
+- Do not expand standard prescription abbreviations unless expansion is explicitly visible.
 - Pharmacist verification is always required.
 - Return valid JSON only.
 
 CONFIDENCE RULES:
-- Give every field an estimated confidence score from 0 to 100.
+- Give every requested field a confidence score from 0 to 100.
 - Use 0 when the field is null, absent, or unreadable.
 - Use 95 to 100 only when the value is clearly visible and unambiguous.
 - Use 85 to 94 when the value appears clear but has minor uncertainty.
 - Use 70 to 84 when pharmacist review is advisable.
 - Use below 70 when the field is unclear, incomplete, conflicting, or likely misread.
-- Confidence must reflect image clarity, not medical plausibility.
-- Confidence scores are review aids and are not proof of correctness.
+- Confidence must reflect image clarity and extraction certainty, not medical plausibility.
 
 CONFIDENCE FLAGS:
 - Add a confidence flag for populated critical fields below 85.
-- Critical medication fields are drugName, strength, and directions.
-- Identify the medication and field whenever possible.
+- Critical fields include patient name, prescriber name, drug name, strength, and directions.
+- Identify the medication number and field whenever possible.
 - Flag unreadable text, conflicting information, ambiguous characters, and missing critical information.
-- Do not flag standard abbreviations such as PO, IV, BID, PRN, q6, or q12 unless the image is unclear.
-- Missing quantity or refills should not automatically be flagged when not present.
+- Do not flag standard abbreviations such as PO, IV, IM, SC, BID, TID, QID, PRN, q6h, or q12h merely because they are abbreviated.
+- Missing quantity or refills should not automatically be flagged when they are not present on the image.
 
 REVIEW NOTES:
 - Add brief pharmacist-facing review notes only when useful.
-- Do not duplicate every confidence flag unnecessarily.`,
+- Do not duplicate every confidence flag.
+- Do not provide treatment recommendations, diagnosis, approval, or dispensing authorization.`,
         },
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: `Extract the prescription information from this image.
+              text: `Extract all information exactly as visibly written on the prescription image.
+
+PATIENT
+- Full name
+- Date of birth
+- Full address
+- Phone number
+
+PRESCRIBER
+- Prescriber name
+- Clinic name
+- Licence number
+- Full address
+- Phone number
+- Fax number
+
+PRESCRIPTION
+- Prescription date
+
+MEDICATIONS
+- Drug name
+- Strength
+- Quantity
+- Refills
+- Directions
+
+Return null for any field that is not visible or cannot be reliably determined.
 
 Return JSON only using exactly this structure:
 
 {
   "patient": {
-    "name": "",
-    "dob": "",
-    "address": "",
-    "phone": ""
+    "name": null,
+    "dob": null,
+    "address": null,
+    "phone": null
   },
-
   "medications": [
     {
       "drugName": null,
@@ -86,14 +122,21 @@ Return JSON only using exactly this structure:
     }
   ],
   "prescriber": {
-    "name": "",
-    "clinicName": "",
-    "licenseNumber": "",
-    "address": "",
-    "phone": "",
-    "fax": ""
+    "name": null,
+    "clinicName": null,
+    "licenseNumber": null,
+    "address": null,
+    "phone": null,
+    "fax": null
   },
-
+  "prescriptionDate": null,
+  "fieldConfidence": {
+    "patient": {
+      "name": 0,
+      "dob": 0,
+      "address": 0,
+      "phone": 0
+    },
     "medications": [
       {
         "drugName": 0,
@@ -103,14 +146,28 @@ Return JSON only using exactly this structure:
         "directions": 0
       }
     ],
-    "prescriber": 0,
+    "prescriber": {
+      "name": 0,
+      "clinicName": 0,
+      "licenseNumber": 0,
+      "address": 0,
+      "phone": 0,
+      "fax": 0
+    },
     "prescriptionDate": 0
   },
   "confidenceFlags": [],
   "reviewNotes": [],
   "verificationStatus": "requires_pharmacist_review",
   "safetyNote": "Prototype only. Verify every field against the original prescription before use."
-}`,
+}
+
+Important:
+- Include one medication object for every current medication order visibly present.
+- If no medication order is visible, return an empty medications array.
+- Keep fieldConfidence.medications in the same order and with the same number of objects as medications.
+- Do not include Markdown code fences.
+- Do not include explanations before or after the JSON.`,
             },
             {
               type: "image_url",
@@ -122,7 +179,7 @@ Return JSON only using exactly this structure:
           ],
         },
       ],
-      temperature: 0,
+
       response_format: {
         type: "json_object",
       },
@@ -134,9 +191,142 @@ Return JSON only using exactly this structure:
       throw new Error("The AI returned an empty response.");
     }
 
-    const extracted = JSON.parse(text);
+    let extracted;
+
+    try {
+      extracted = JSON.parse(text);
+    } catch {
+      throw new Error("The AI returned invalid JSON.");
+    }
+
+    extracted.patient = {
+      name: extracted.patient?.name ?? null,
+      dob: extracted.patient?.dob ?? null,
+      address: extracted.patient?.address ?? null,
+      phone: extracted.patient?.phone ?? null,
+    };
+
+    extracted.prescriber = {
+      name: extracted.prescriber?.name ?? null,
+      clinicName: extracted.prescriber?.clinicName ?? null,
+      licenseNumber: extracted.prescriber?.licenseNumber ?? null,
+      address: extracted.prescriber?.address ?? null,
+      phone: extracted.prescriber?.phone ?? null,
+      fax: extracted.prescriber?.fax ?? null,
+    };
+
+    extracted.prescriptionDate = extracted.prescriptionDate ?? null;
+
+    extracted.medications = Array.isArray(extracted.medications)
+      ? extracted.medications.map((medication) => ({
+          drugName: medication?.drugName ?? null,
+          strength: medication?.strength ?? null,
+          quantity: medication?.quantity ?? null,
+          refills: medication?.refills ?? null,
+          directions: medication?.directions ?? null,
+        }))
+      : [];
+
+    const medicationConfidence = Array.isArray(
+      extracted.fieldConfidence?.medications
+    )
+      ? extracted.fieldConfidence.medications
+      : [];
+
+    extracted.fieldConfidence = {
+      patient: {
+        name: normalizeConfidence(
+          extracted.fieldConfidence?.patient?.name,
+          extracted.patient.name
+        ),
+        dob: normalizeConfidence(
+          extracted.fieldConfidence?.patient?.dob,
+          extracted.patient.dob
+        ),
+        address: normalizeConfidence(
+          extracted.fieldConfidence?.patient?.address,
+          extracted.patient.address
+        ),
+        phone: normalizeConfidence(
+          extracted.fieldConfidence?.patient?.phone,
+          extracted.patient.phone
+        ),
+      },
+
+      medications: extracted.medications.map((medication, index) => {
+        const confidence = medicationConfidence[index] || {};
+
+        return {
+          drugName: normalizeConfidence(
+            confidence.drugName,
+            medication.drugName
+          ),
+          strength: normalizeConfidence(
+            confidence.strength,
+            medication.strength
+          ),
+          quantity: normalizeConfidence(
+            confidence.quantity,
+            medication.quantity
+          ),
+          refills: normalizeConfidence(
+            confidence.refills,
+            medication.refills
+          ),
+          directions: normalizeConfidence(
+            confidence.directions,
+            medication.directions
+          ),
+        };
+      }),
+
+      prescriber: {
+        name: normalizeConfidence(
+          extracted.fieldConfidence?.prescriber?.name,
+          extracted.prescriber.name
+        ),
+        clinicName: normalizeConfidence(
+          extracted.fieldConfidence?.prescriber?.clinicName,
+          extracted.prescriber.clinicName
+        ),
+        licenseNumber: normalizeConfidence(
+          extracted.fieldConfidence?.prescriber?.licenseNumber,
+          extracted.prescriber.licenseNumber
+        ),
+        address: normalizeConfidence(
+          extracted.fieldConfidence?.prescriber?.address,
+          extracted.prescriber.address
+        ),
+        phone: normalizeConfidence(
+          extracted.fieldConfidence?.prescriber?.phone,
+          extracted.prescriber.phone
+        ),
+        fax: normalizeConfidence(
+          extracted.fieldConfidence?.prescriber?.fax,
+          extracted.prescriber.fax
+        ),
+      },
+
+      prescriptionDate: normalizeConfidence(
+        extracted.fieldConfidence?.prescriptionDate,
+        extracted.prescriptionDate
+      ),
+    };
+
+    extracted.confidenceFlags = Array.isArray(extracted.confidenceFlags)
+      ? extracted.confidenceFlags.filter(
+          (flag) => typeof flag === "string" && flag.trim()
+        )
+      : [];
+
+    extracted.reviewNotes = Array.isArray(extracted.reviewNotes)
+      ? extracted.reviewNotes.filter(
+          (note) => typeof note === "string" && note.trim()
+        )
+      : [];
 
     extracted.verificationStatus = "requires_pharmacist_review";
+
     extracted.safetyNote =
       "Prototype only. Verify every field against the original prescription before use.";
 
@@ -152,4 +342,18 @@ Return JSON only using exactly this structure:
           : undefined,
     });
   }
+}
+
+function normalizeConfidence(score, value) {
+  if (value === null || value === undefined || value === "") {
+    return 0;
+  }
+
+  const number = Number(score);
+
+  if (!Number.isFinite(number)) {
+    return 0;
+  }
+
+  return Math.max(0, Math.min(100, Math.round(number)));
 }
