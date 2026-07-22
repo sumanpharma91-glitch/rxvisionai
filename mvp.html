@@ -1395,7 +1395,10 @@ const drugName = rawDrug
   .replace(/\b(tablets?|tabs?|capsules?|caps?|solution|suspension|cream|ointment|patch)\b/gi, "")
   .trim();
 const strength = fields[1]?.value.trim() || "";
-const directions = fields[4]?.value.trim() || "";
+const dosageForm = fields[2]?.value.trim() || "";
+const quantity = fields[3]?.value.trim() || "";
+const refills = fields[4]?.value.trim() || "";
+const directions = fields[5]?.value.trim() || "";
   const resultBox = card.querySelector(".health-canada-result");
 
   if (!resultBox) return;
