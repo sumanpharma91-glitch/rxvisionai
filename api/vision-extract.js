@@ -114,12 +114,13 @@ Return JSON only using exactly this structure:
   },
   "medications": [
     {
-      "drugName": null,
-      "strength": null,
-      "quantity": null,
-      "refills": null,
-      "directions": null
-    }
+  "drugName": "Metformin",
+  "strength": "500 mg",
+  "dosageForm": "Tablet",
+  "quantity": "60 tablets",
+  "refills": "3",
+  "directions": "Take one tablet PO BID"
+}
   ],
   "prescriber": {
     "name": null,
