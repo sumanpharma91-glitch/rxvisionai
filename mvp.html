@@ -633,6 +633,14 @@ if (validationPanel) {
   validationPanel.innerHTML =
     "<p>No validation available.</p>";
 }
+ // Reset Clinical Decision Support
+const clinicalDecisionPanel =
+  document.getElementById("clinicalDecisionPanel");
+
+if (clinicalDecisionPanel) {
+  clinicalDecisionPanel.innerHTML =
+    "<p>No clinical decision analysis available.</p>";
+}
 
   // Reset review notes
   const reviewNotesList =
