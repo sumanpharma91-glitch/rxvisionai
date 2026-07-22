@@ -1253,9 +1253,9 @@ function renderAIReviewSummary(data) {
   // Prescriber
   checkField(
     "Prescriber",
-    data.prescriber,
-    confidence.prescriber
-  );
+    data.prescriber?.name,
+    confidence.prescriber?.name
+);
 
   // Prescription Date
   checkField(
